@@ -20,6 +20,6 @@ export default {
 
 <style lang="less">
 #container {
-  height: calc(100% - 61px);
+  height: calc(100vh - 61px);
 }
 </style>
