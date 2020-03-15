@@ -7,14 +7,25 @@
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run locally
+
+Run the front end devserver with hot-reload
 ```
-npm run serve
+npm run fe  # on a random port - see the command line message
 ```
 
-### Compiles and minifies for production
+Run the node express server
 ```
-npm run build
+npm run build  # compile fe code
+npm run be  # run the express server, port defined in `CONFIG.js`.
+```
+
+See `src/router` to find all the available routes.
+
+### Prod
+```
+npm run build  # compile all front end code.
+npm run prod  # run express server on forever.js, port defined in `CONFIG.js`.
 ```
 
 ### Lints and fixes files
