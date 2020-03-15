@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.1",
+    "ant-design-vue": "^1.4.12",
     "vue": "^2.6.10",
+    "vue-router": "^3.0.3",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
@@ -25,6 +27,8 @@
     "eslint-plugin-vue": "^5.2.3",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
+    "pug": "^2.0.4",
+    "pug-plain-loader": "^1.0.0",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.38.0",
     "ws": "^7.1.2"
@@ -41,11 +45,6 @@
     "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
     }
   },
   "browserslist": [

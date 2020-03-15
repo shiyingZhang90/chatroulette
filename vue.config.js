@@ -58,7 +58,6 @@ function hangUp (socketId, msg) {
     if (peerSocket) {
       peerSocket.send(JSON.stringify(msg))
       log(`#${socketId} hangs up #${peerId}`)
-      return
     }
   } else {
     let myIndex = waitingQueue.indexOf(socketId)
@@ -80,7 +79,6 @@ function sendToPeer (socketId, msg) {
   if (peerSocket) {
     peerSocket.send(JSON.stringify({ type: msg.type, data: msg.data }))
     log(`#${socketId} sends ${msg.type} to #${peerId}`)
-    return
   }
 }
 

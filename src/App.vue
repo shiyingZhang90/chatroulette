@@ -1,22 +1,8 @@
 <template>
   <div id="app">
-    <app-header></app-header>
-    <app-container></app-container>
+    <router-view/>
   </div>
 </template>
-
-<script>
-import AppHeader from './components/Header'
-import AppContainer from './components/Container'
-
-export default {
-  name: 'app',
-  components: {
-    AppHeader,
-    AppContainer
-  }
-}
-</script>
 
 <style lang="less">
 @import "~@fortawesome/fontawesome-free/less/fontawesome.less";
