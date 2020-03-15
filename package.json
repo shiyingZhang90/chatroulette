@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prod": "npm run build && sudo forever start server/index.js",
+    "stop": "sudo forever stopall"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.1",
