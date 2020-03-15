@@ -78,6 +78,14 @@ export default {
   },
 
   getUserMedia ({ commit, state }) {
+    if (!navigator.mediaDevices) {
+      if (location.protocol === 'http:') {
+        alert('Camera and Mic are not available vis http connection.')
+      } else {
+        alert('Cannot find your camera / mic.')
+      }
+      return
+    }
     return navigator.mediaDevices.getUserMedia(state.mediaConstraints)
       .then((mediaStream) => {
         commit('addLocalStream', mediaStream)

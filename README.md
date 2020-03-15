@@ -26,6 +26,7 @@ See `src/router` to find all the available routes.
 ```
 npm run build  # compile all front end code.
 npm run prod  # run express server on forever.js, port defined in `CONFIG.js`.
+npm run stop  # stop the server
 ```
 
 ### Lints and fixes files
