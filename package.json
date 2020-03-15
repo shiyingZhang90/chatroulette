@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "prod": "npm run build && sudo forever start server/index.js",
+    "prod": "sudo forever start server/index.js",
     "stop": "sudo forever stopall"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.3",
+    "forever": "^2.0.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "pug": "^2.0.4",

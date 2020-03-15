@@ -16,7 +16,7 @@ const httpServer = () => {
     response.sendFile(path.resolve(__dirname, '../', STATIC_FOLDER, 'index.html'));
   });
 
-  const port = process.env.PORT;
+  const port = process.env.PORT || 80;
   http.createServer(httpApp).listen(port, () => {console.log(`HTTP listening port ${port}...`)});
 }
 
