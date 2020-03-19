@@ -50,5 +50,5 @@ const httpServer = () => {
   startWsS({server});
 }
 
-// httpsServer();
-httpServer()
+httpsServer();
+// httpServer()
