@@ -1,4 +1,4 @@
-const ROOT = 'https://klogserver.westus2.cloudapp.azure.com/api/0/'
+const ROOT = require('../CONFIG.js').API_ROOT
 const ALL_VALUE = 'all'
 
 export async function callApi (path, payload = {}, method) {
