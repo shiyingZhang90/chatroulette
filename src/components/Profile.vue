@@ -1,6 +1,6 @@
 <template lang="pug">
 main
-  Profile(:person="PROFILES[3]")
+  Profile(:person="PROFILES[3]" )
 </template>
 
 <script>

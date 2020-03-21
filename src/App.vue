@@ -18,8 +18,19 @@
   height: 100%;
 }
 
-body {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-
+html {
+  height: 100%;
 }
+
+body {
+  margin: 0;
+  height: 100% !important;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+}
+
 </style>

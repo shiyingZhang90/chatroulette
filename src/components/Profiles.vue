@@ -1,8 +1,5 @@
 <template lang="pug">
 main
-  p Example of access one person - person id: 3
-  Profile(:person="PROFILES[3]")
-  p Example of displaying all users
   template(v-for="person in group")
   .grid
     Profile(v-for="person in PROFILES", :person="person")
