@@ -25,6 +25,9 @@ export default {
 
   computed: mapState(['localStream', 'connectionState']),
 
+  mounted () {
+    this.start()
+  },
   methods: {
     ...mapMutations(['createPeerConnection', 'closePeerConnection', 'addLocalStream', 'removeLocalStream']),
     ...mapActions(['getUserMedia', 'hangUpCall']),

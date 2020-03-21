@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Chatroom from './views/Chatroom.vue'
 import Ad from './views/Ad.vue'
 import Profiles from './views/Profiles.vue'
+import Select from './views/Select.vue'
 
 Vue.use(Router)
 
@@ -20,7 +21,8 @@ const routes = [
   { path: '/service/complete', component: Ad },
   { path: '/serviceyt/complete', component: Ad },
   { path: '/chatroom', component: Chatroom },
-  { path: '/profiles', component: Profiles }
+  { path: '/profiles', component: Profiles },
+  { path: '/select', component: Select }
 ]
 
 export default new Router({
