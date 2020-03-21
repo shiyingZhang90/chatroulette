@@ -14,12 +14,12 @@
   padding: 0;
 }
 
+#app {
+  height: 100%;
+}
+
 body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 14px;
-  color: #333;
-  background-color: #fff;
+
 }
 </style>

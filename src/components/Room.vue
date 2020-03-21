@@ -23,6 +23,7 @@ export default {
 
 <style lang="less">
 #room {
+  border-right: 5px solid #ddd;
   flex: 1 1 auto;
   flex-flow: column nowrap;
   position: relative;

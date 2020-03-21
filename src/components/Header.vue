@@ -3,17 +3,19 @@
     <h1>
       <a href="/">Chatroulette</a>
     </h1>
-    <ul class="control">
-      <li>
-        <button @click="start" :disabled="connectionState !== 'closed'">Start</button>
-      </li>
-      <li>
-        <button @click="next" :disabled="connectionState !== 'open'">Next</button>
-      </li>
-      <li>
-        <button @click="stop" :disabled="connectionState === 'closed'">Stop</button>
-      </li>
-    </ul>
+    <div class="header">
+      <ul class="control">
+        <li>
+          <button class="button-sm" @click="start" :disabled="connectionState !== 'closed'">Start</button>
+        </li>
+        <li>
+          <button class="button-sm" @click="next" :disabled="connectionState !== 'open'">New Chat</button>
+        </li>
+        <li>
+          <button class="button-sm" @click="stop" :disabled="connectionState === 'closed'">Stop</button>
+        </li>
+      </ul>
+    </div>
   </header>
 </template>
 
@@ -25,9 +27,6 @@ export default {
 
   computed: mapState(['localStream', 'connectionState']),
 
-  mounted () {
-    this.start()
-  },
   methods: {
     ...mapMutations(['createPeerConnection', 'closePeerConnection', 'addLocalStream', 'removeLocalStream']),
     ...mapActions(['getUserMedia', 'hangUpCall']),
@@ -64,17 +63,25 @@ export default {
   h1 {
     margin-left: 10px;
   }
-
+  .button-sm {
+  background-color: #96B9F8;
+  color: white;
+  padding: 7px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 30px;
+  margin: 6px 10px;
+  border-radius: 20px;
+  }
   .control {
     li {
       display: inline-block;
-      margin-right: 20px;
+      margin-right: 30px;
     }
-
-    button[disabled] {
-      cursor: not-allowed;
-      color: #767676;
-    }
+  }
+  .header {
+    margin-right: 240px;
   }
 }
 </style>

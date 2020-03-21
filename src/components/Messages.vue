@@ -11,12 +11,14 @@
       <p class="text">
         <span class="tip"><i class="fas fa-spinner fa-spin"></i></span>
         Life is like a non-stop roulette. You never know who you will meet next...
+        <button class="button-sm" @click="next" :disabled="connectionState !== 'open'">New chat</button>
       </p>
     </li>
 
     <li v-for="(message, index) of messages" :key="`${index}`" :class="message.role" class="message">
       <p class="text"><span class="tip" v-html="message.html"></span>{{message.text}}</p>
     </li>
+<!--     <button v-if="showbutton"></button> -->
   </transition-group>
 </template>
 
@@ -28,11 +30,16 @@ export default {
 
   computed: mapState(['messages', 'connectionState']),
 
+  // watch:{
+  //   connectionState(newvalue, oldvalue){
+  //     if(newvalue === 'connecting'){
+  //       this.showbutton = true
+  //     }
+  //   }
+  // }
   methods: {
     enter (el) {
       el.scrollIntoView({ block: 'end', behavior: 'auto' })
-      // let chatWrapper = el.parentNode.parentNode
-      // chatWrapper.scrollTop = chatWrapper.scrollHeight - chatWrapper.clientHeight
     }
   }
 }
@@ -91,7 +98,17 @@ export default {
       border-color: lawnGreen transparent transparent transparent;
     }
   }
-
+  .button-sm {
+    background-color: #96B9F8;
+    color: white;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+    margin: 6px 10px;
+    border-radius: 20px;
+  }
   .partner {
     float: left;
     background-color: whiteSmoke;
