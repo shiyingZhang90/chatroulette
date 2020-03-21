@@ -4,6 +4,7 @@ import Chatroom from './views/Chatroom.vue'
 import Ad from './views/Ad.vue'
 import Profiles from './views/Profiles.vue'
 import Select from './views/Select.vue'
+import Chatroom_vlogger from './views/Chatroom_vlogger.vue'
 
 Vue.use(Router)
 
@@ -22,7 +23,8 @@ const routes = [
   { path: '/serviceyt/complete', component: Ad },
   { path: '/chatroom', component: Chatroom },
   { path: '/profiles', component: Profiles },
-  { path: '/select', component: Select }
+  { path: '/select', component: Select },
+  { path: '/chat_vlogger', component: Chatroom_vlogger}
 ]
 
 export default new Router({
