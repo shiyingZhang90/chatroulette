@@ -1,5 +1,5 @@
 <template>
-  <div id="chatroom">
+  <div id="profileroom">
     <app-header></app-header>
     <app-profiles></app-profiles>
   </div>
@@ -42,7 +42,7 @@ ul, h1, h2 {
   padding: 0;
 }
 
-#chatroom {
+#profileroom {
   height: 100%;
   overflow: auto;
   position: relative;

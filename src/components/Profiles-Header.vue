@@ -30,13 +30,13 @@ export default {
   methods: {
     ...mapMutations(['createPeerConnection', 'closePeerConnection', 'addLocalStream', 'removeLocalStream']),
     ...mapActions(['getUserMedia', 'hangUpCall']),
-    onChat(){
+    onChat () {
       this.$router.push(`/chatroom`)
     },
-    onMain(){
+    onMain () {
       this.$router.push(`/service`)
     },
-    onProfile(){
+    onProfile () {
       this.$router.push(`/profiles`)
     },
     start () {

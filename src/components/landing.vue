@@ -29,17 +29,13 @@ export default {
       groups: [],
       LOGO,
       PROFILES,
-      mainProps: {  width: 150, height: 100, class: 'm1' },
+      mainProps: { width: 150, height: 100, class: 'm1' },
       show: true
     }
   },
   computed: {
     hasSubmitted () {
       return this.$route.path.split('/')[2] === 'complete'
-    },
-    backgroundImage(url) {
-      let overlay = 'linear-gradient(270deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5))';
-      return 'background-image:'+ overlay +' , url(' + url + ');';
     }
   },
   methods: {
@@ -47,7 +43,7 @@ export default {
     // this.$router.push('home');
     },
     submit () {
-      alert(JSON.stringify(this.form))
+      // alert(JSON.stringify(this.form))
       callApi('config/user', {
         user_description: `Registered via the ${this.adType} ad.`,
         user_email: this.email,
@@ -148,7 +144,7 @@ audio {
   height: 70%;
 }
 .blur-content{
-  filter: blur(5px); 
+  filter: blur(5px);
 }
 .sign_form {
   margin-left: 10%;

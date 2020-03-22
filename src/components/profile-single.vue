@@ -17,7 +17,7 @@
 export default {
   props: ['person'],
   methods: {
-    onChat(){
+    onChat () {
       this.$router.push(`/chat_vlogger`)
     }
   }
