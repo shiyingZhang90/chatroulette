@@ -44,6 +44,7 @@ export default {
     },
     submit () {
       // alert(JSON.stringify(this.form))
+      this.$ga.event('Landing', 'Register')
       callApi('config/user', {
         user_description: `Registered via the ${this.adType} ad.`,
         user_email: this.email,
@@ -134,7 +135,7 @@ audio {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover; 
+  background-size: cover;
   background-position: center;
 
   filter: blur(8px);

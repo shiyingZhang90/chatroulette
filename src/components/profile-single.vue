@@ -18,6 +18,7 @@ export default {
   props: ['person'],
   methods: {
     onChat () {
+      this.$ga.event('Profile', 'chooseVlogger')
       this.$router.push(`/chat_vlogger`)
     }
   }

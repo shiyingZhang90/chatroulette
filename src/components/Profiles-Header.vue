@@ -31,12 +31,14 @@ export default {
     ...mapMutations(['createPeerConnection', 'closePeerConnection', 'addLocalStream', 'removeLocalStream']),
     ...mapActions(['getUserMedia', 'hangUpCall']),
     onChat () {
+      this.$ga.event('Profile', 'chooseRandom')
       this.$router.push(`/chatroom`)
     },
     onMain () {
       this.$router.push(`/service`)
     },
     onProfile () {
+      this.$ga.event('Profile', 'browseGirls')
       this.$router.push(`/profiles`)
     },
     start () {

@@ -32,11 +32,13 @@ export default {
     ...mapActions(['getUserMedia', 'hangUpCall']),
 
     start () {
+      this.$ga.event('Chat', 'chatStart')
       this.createPeerConnection()
       this.getUserMedia()
     },
 
     next () {
+      this.$ga.event('Chat', 'chatNext')
       this.closePeerConnection()
       this.hangUpCall()
       this.createPeerConnection()
@@ -44,6 +46,7 @@ export default {
     },
 
     stop () {
+      this.$ga.event('Chat', 'chatStop')
       this.closePeerConnection()
       this.hangUpCall()
       this.removeLocalStream()
