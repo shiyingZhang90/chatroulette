@@ -6,7 +6,7 @@ div(class="h-100 position-relative")
       div(class="m-sign-up align-items-center")
         b-form(@submit="submit" , v-if="show")
           b-form-group(id="input-group-1", label="Customize chat partner now", label-for="input-1", )
-              b-form-input(id="input-1", type="email", placeholder="Enter email", required)
+              b-form-input(id="input-1", type="email", placeholder="Enter email", required, class="form-control")
                 v-model="form.email"
           b-button(type="submit", href="#" variant="primary" @click="submit") Customize Now
   h3(class="") 本月排行榜
@@ -26,6 +26,9 @@ export default {
   components: { Profile },
   data () {
     return {
+      form: {
+          email: ''
+      },
       groups: [],
       LOGO,
       PROFILES,
@@ -42,8 +45,7 @@ export default {
     clickMethod () {
     // this.$router.push('home');
     },
-    submit () {
-      // alert(JSON.stringify(this.form))
+    submit (evt) {
       this.$ga.event('Landing', 'Register')
       callApi('config/user', {
         user_description: `Registered via the ${this.adType} ad.`,

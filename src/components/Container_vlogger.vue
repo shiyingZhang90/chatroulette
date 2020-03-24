@@ -8,7 +8,7 @@
 
 <script>
 import ContainerProfile from './Profile'
-import ContainerRoom from './Room'
+import ContainerRoom from './Room_vlogger'
 import ContainerList from './ChatHead'
 
 export default {

@@ -51,6 +51,21 @@ export default {
       console.log(text)
       if (text) {
         this.addMessage({ text, role: 'you' })
+        var http_request = 'https://api.pandorabots.com/talk?botkey=cmNxvzM3vWEV2r9Da7sIOHAqWGkHr0kkkB3pud81ubHB2E7V1ft74tl9W8m_mhbDIjNhLFzaMCA~&input='
+        fetch(http_request.concat(text), {
+          method: 'POST'
+        })
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            for (const response of data.responses) {
+              setTimeout(() => this.addMessage({ text: response, role: 'partner' }), 3000);
+              // this.addMessage({ text: response, role: 'partner' })
+              console.log(response)
+            }
+            console.log(data.responses)
+          })
         textarea.value = ''
         if (this.connectionState === 'open') {
           this.socket.emit('message', { text, role: 'partner' })
