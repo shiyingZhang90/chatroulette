@@ -7,6 +7,13 @@ import VueSelectImage from 'vue-select-image'
 import VueAnalytics from 'vue-analytics'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import * as facemesh from '@tensorflow-models/facemesh';
+import * as tf from '@tensorflow/tfjs-core';
+import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
+import Stats from 'stats.js';
+import LoadScript from 'vue-plugin-load-script';
+ 
+Vue.use(LoadScript);
 require('vue-select-image/dist/vue-select-image.css')
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

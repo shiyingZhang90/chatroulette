@@ -67,9 +67,9 @@ export default {
             console.log(data.responses)
           })
         textarea.value = ''
-        if (this.connectionState === 'open') {
-          this.socket.emit('message', { text, role: 'partner' })
-        }
+        // if (this.connectionState === 'open') {
+        //   this.socket.emit('message', { text, role: 'partner' })
+        // }
       }
     }
   }

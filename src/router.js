@@ -3,8 +3,9 @@ import Router from 'vue-router'
 import Chatroom from './views/Chatroom.vue'
 import Ad from './views/Ad.vue'
 import landing from './components/landing.vue'
+import facemesh from './components/facemesh.vue'
 import Profiles from './views/Profile-scroll.vue'
-import Chatroom_vlogger from './views/Chatroom_vlogger.vue'
+import ChatroomVlogger from './views/Chatroom_vlogger.vue'
 
 Vue.use(Router)
 
@@ -23,7 +24,8 @@ const routes = [
   { path: '/serviceyt/complete', component: Ad },
   { path: '/chatroom', component: Chatroom },
   { path: '/profiles', component: Profiles },
-  { path: '/chat_vlogger', component: Chatroom_vlogger }
+  { path: '/chat_vlogger', component: ChatroomVlogger },
+  { path: '/facemesh', component: facemesh }
 ]
 
 export default new Router({
