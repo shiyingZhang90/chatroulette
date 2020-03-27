@@ -16,6 +16,7 @@
  */
 
 import * as facemesh from '@tensorflow-models/facemesh';
+import * as handpose from '@tensorflow-models/handpose';
 import Stats from 'stats.js';
 import * as tf from '@tensorflow/tfjs-core';
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
@@ -24,7 +25,7 @@ import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 import {version} from '@tensorflow/tfjs-backend-wasm/dist/version';
 
 import {TRIANGULATION} from './triangulation';
-
+import drawKeypoints from './hand_index'
 
 
 
@@ -54,12 +55,13 @@ function drawPath(ctx, points, closePath) {
 
 let model, ctx, videoWidth, videoHeight, video, canvas,
     scatterGLHasInitialized = false, scatterGL;
-
+let model_hand;
 const VIDEO_SIZE = 500;
 const mobile = isMobile();
 // Don't render the point cloud on mobile in order to maximize performance and
 // to avoid crowding limited screen space.
-const renderPointcloud = mobile === false;
+// const renderPointcloud = mobile === false;
+const renderPointcloud = false;
 const stats = new Stats();
 const state = {
   backend: 'wasm',
@@ -171,6 +173,18 @@ async function renderPrediction() {
   requestAnimationFrame(renderPrediction);
 };
 
+async function frameLandmarks() {
+  console.log("drawKeypoints executed")
+  stats.begin();
+  const predictions_hand = await model_hand.estimateHands(video);
+  console.log("hand predition done")
+  if (predictions_hand.length > 0) {
+      const result_hand = predictions_hand[0].landmarks;
+      drawKeypoints(ctx, result_hand, predictions_hand[0].annotations);
+      console.log("drawKeypoints executed")
+  }
+}
+
 async function facemeshMain() {
   await tf.setBackend(state.backend);
   setupDatGui();
@@ -198,8 +212,12 @@ async function facemeshMain() {
   ctx.strokeStyle = '#32EEDB';
   ctx.lineWidth = 0.5;
 
-  model = await facemesh.load({maxFaces: state.maxFaces});
-  renderPrediction();
+  // model = await facemesh.load({maxFaces: state.maxFaces});
+  // renderPrediction();
+  //hand pose
+  model_hand = await handpose.load();
+  frameLandmarks();
+
 
   if (renderPointcloud) {
     document.querySelector('#scatter-gl-container').style =
