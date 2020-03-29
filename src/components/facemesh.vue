@@ -21,15 +21,12 @@
 import {version} from '@tensorflow/tfjs-backend-wasm/dist/version'
 import {TRIANGULATION} from './triangulation'
 import facemeshMain from './facemesh_index'
+import handPoseMain from './hand_index'
 import Vue from 'vue'
 export default {
   created () {
-    console.log('executing 1')
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js")
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/scatter-gl@0.0.1/lib/scatter-gl.min.js")
-    Vue.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js")
-    this.openCamera()
-    
+
+    this.openCamera();
   },
   methods: {
     openCamera () {

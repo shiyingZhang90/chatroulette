@@ -24,7 +24,7 @@ import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 import {version} from '@tensorflow/tfjs-backend-wasm/dist/version';
 
 import {TRIANGULATION} from './triangulation';
-
+// import ScatterGL from 'scatter-gl';
 
 
 
@@ -59,7 +59,8 @@ const VIDEO_SIZE = 500;
 const mobile = isMobile();
 // Don't render the point cloud on mobile in order to maximize performance and
 // to avoid crowding limited screen space.
-const renderPointcloud = mobile === false;
+// const renderPointcloud = mobile === false;
+const renderPointcloud = false;
 const stats = new Stats();
 const state = {
   backend: 'wasm',

@@ -1,5 +1,5 @@
 <template>
-<div>  
+<div>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, user-scalable=no">
   <div id="info" style='display:none'></div>
@@ -25,37 +25,12 @@ import handPoseMain from './hand_index'
 import Vue from 'vue'
 export default {
   created () {
-    /*
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js")
-    Vue.loadScript("https://storage.googleapis.com/learnjs-data/handtrack_staging/scatter-gl.js")
-    Vue.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js")
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js")
-    */
-
-    /*
-    console.log('executing 1')
-    const allScripts = [
-      "https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js",
-      "https://storage.googleapis.com/learnjs-data/handtrack_staging/scatter-gl.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js",
-      "https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js",
-    ];
-    const allPromises = [];
-    for (let i = 0; i < allScripts.length; i++) {
-      const p = Vue.loadScript(allScripts[i]);
-      allPromises.push(p);
-    }
-    Promise.all(allPromises).then((values) => {
-      this.openCamera();
-    });
-    */
-
-    this.openCamera();
+    this.startWorker();
   },
   methods: {
     openCamera () {
       handPoseMain();
-    } 
+    }
   }
 }
 </script>
