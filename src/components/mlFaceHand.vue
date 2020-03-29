@@ -33,7 +33,7 @@
   </div>
   <div id="scatter-gl-container"></div>
   <div class="embed-responsive embed-responsive-16by9 w-50 mx-auto">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
   </div>
 </div>  
 </template>
