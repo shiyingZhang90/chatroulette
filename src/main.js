@@ -7,12 +7,16 @@ import VueSelectImage from 'vue-select-image'
 import VueAnalytics from 'vue-analytics'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import * as facemesh from '@tensorflow-models/facemesh';
-import * as tf from '@tensorflow/tfjs-core';
-import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
-import Stats from 'stats.js';
-import LoadScript from 'vue-plugin-load-script';
- 
+import * as facemesh from '@tensorflow-models/facemesh'
+import * as tf from '@tensorflow/tfjs-core'
+import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm'
+import Stats from 'stats.js'
+import LoadScript from 'vue-plugin-load-script'
+import VueWorker from 'vue-worker'
+import VueFriendlyIframe from 'vue-friendly-iframe';
+
+Vue.component('vue-friendly-iframe', VueFriendlyIframe);
+Vue.use(VueWorker) 
 Vue.use(LoadScript);
 require('vue-select-image/dist/vue-select-image.css')
 Vue.use(BootstrapVue)

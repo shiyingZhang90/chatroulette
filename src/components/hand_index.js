@@ -16,7 +16,8 @@
  */
 
 import * as handpose from '@tensorflow-models/handpose';
-
+import * as facemesh from '@tensorflow-models/facemesh';
+import {TRIANGULATION} from './triangulation';
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
   const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -60,6 +61,7 @@ function setupDatGui() {
 function drawPoint(ctx, y, x, r) {
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 2 * Math.PI);
+  console.log("drawPoint"+x+y+r)
   ctx.fill();
 }
 
@@ -70,6 +72,7 @@ function drawKeypoints(ctx, keypoints) {
     const y = keypointsArray[i][0];
     const x = keypointsArray[i][1];
     drawPoint(ctx, x - 2, y - 2, 3);
+    console.log("drawKeyPoint"+x+y)
   }
 
   const fingers = Object.keys(fingerLookupIndices);
@@ -94,7 +97,7 @@ function drawPath(ctx, points, closePath) {
   ctx.stroke(region);
 }
 
-let model;
+let model, model_face;
 
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -130,6 +133,7 @@ async function loadVideo() {
 
 const handPoseMain = async () => {
   model = await handpose.load();
+  model_face = await facemesh.load({maxFaces: 1});
   let video;
 
   try {
@@ -141,6 +145,7 @@ const handPoseMain = async () => {
     throw e;
   }
 
+  
   landmarksRealTime(video);
 }
 
@@ -180,8 +185,11 @@ const landmarksRealTime = async (video) => {
     stats.begin();
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     const predictions = await model.estimateHands(video);
+    console.log("hand")
+    console.log(predictions.length)
     if (predictions.length > 0) {
       const result = predictions[0].landmarks;
+      console.log("prediction result is "+result)
       drawKeypoints(ctx, result, predictions[0].annotations);
 
       if (renderPointcloud === true && scatterGL != null) {
@@ -213,7 +221,9 @@ const landmarksRealTime = async (video) => {
     requestAnimationFrame(frameLandmarks);
   };
 
+
   frameLandmarks();
+  // frameLandmarksFace();
 
   if (renderPointcloud) {
     document.querySelector('#scatter-gl-container').style =
@@ -230,3 +240,4 @@ navigator.getUserMedia = navigator.getUserMedia ||
 
 // main();
 export default handPoseMain;
+// export default drawKeypoints;

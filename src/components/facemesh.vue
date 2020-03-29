@@ -25,28 +25,6 @@ import handPoseMain from './hand_index'
 import Vue from 'vue'
 export default {
   created () {
-    /*
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js")
-    Vue.loadScript("https://cdn.jsdelivr.net/npm/scatter-gl@0.0.1/lib/scatter-gl.min.js")
-    Vue.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js")
-    */
-
-    /*
-    console.log('executing 1')
-    const allScripts = [
-      "https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js",
-      "https://cdn.jsdelivr.net/npm/scatter-gl@0.0.1/lib/scatter-gl.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js",
-    ];
-    const allPromises = [];
-    for (let i = 0; i < allScripts.length; i++) {
-      const p = Vue.loadScript(allScripts[i]);
-      allPromises.push(p);
-    }
-    Promise.all(allPromises).then((values) => {
-      this.openCamera();
-    });
-    */
 
     this.openCamera();
   },
