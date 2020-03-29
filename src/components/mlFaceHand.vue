@@ -25,7 +25,7 @@
     <div class="explanation">
       <h1 class = "title">Magic Coavoid</h1>
       <h3 class = "body">The CDC lists "avoid touching your eyes, nose, and mouse" as critical measure to avoid COVID-19.</h3>
-      <h3 class = "body">Coavoid uses AI to warn you whenever you touch your eyes, nose and mouth</h3>
+      <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
     </div>
     <div class="notice">
       <h3 class = "body">Please open this website in a new browser window to keep this tab alive</h3>

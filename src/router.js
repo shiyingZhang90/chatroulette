@@ -4,7 +4,7 @@ import Chatroom from './views/Chatroom.vue'
 import Ad from './views/Ad.vue'
 import landing from './components/landing.vue'
 import facemesh from './components/facemesh.vue'
-import faceHand from './components/mlFaceHand.vue'
+import Coavoid from './components/mlFaceHand.vue'
 import Profiles from './views/Profile-scroll.vue'
 import ChatroomVlogger from './views/Chatroom_vlogger.vue'
 
@@ -27,7 +27,7 @@ const routes = [
   { path: '/profiles', component: Profiles },
   { path: '/chat_vlogger', component: ChatroomVlogger },
   { path: '/facemesh', component: facemesh },
-  { path: '/facehand', component: faceHand }
+  { path: '/coavoid', component: Coavoid }
 ]
 
 export default new Router({
