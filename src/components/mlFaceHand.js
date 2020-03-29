@@ -52,7 +52,7 @@ const renderPointcloud = false;
 const state = {
   backend: 'wasm',
   triangulateMesh: true,
-  lowSpeedMode: true
+  lowSpeedMode: false
 };
 
 if (renderPointcloud) {
@@ -251,9 +251,10 @@ const landmarksRealTime = async (video) => {
     return finger_points;
   };
 
+  let polygon_lips, polygon_eye, polygon_nose, polygon_all;
+
   async function frameLandmarksFace() {
     stats.begin();
-    let polygon_lips, polygon_eye, polygon_nose, polygon_all;
     const predictions_face = await model_face.estimateFaces(video);
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     if (predictions_face.length > 0) {

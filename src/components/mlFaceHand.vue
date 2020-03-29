@@ -28,12 +28,12 @@
       <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
     </div>
     <div class="notice">
-      <h3 class = "body">Please open this website in a new browser window to keep this tab alive. You can toggle lowSpeedMode if you want to run faster</h3>
+      <h3 class = "body">Please open this website in a new browser window to keep this tab alive. You can toggle lowSpeedMode if you want to run quietly</h3>
     </div>  
   </div>
   <div id="scatter-gl-container"></div>
   <div class="embed-responsive embed-responsive-16by9 w-50 mx-auto">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/BtulL3oArQw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
   </div>
 </div>  
 </template>
@@ -41,8 +41,12 @@
 <script>
 import mlFaceHand from './mlFaceHand'
 import Vue from 'vue'
+import Push from 'push.js';
 export default {
   created () {
+    if (!Push.Permission.has()) {
+      Push.Permission.request();
+    }
     // this.$worker.run((args) => {
     //   {args};
     //   return `Hello!`
