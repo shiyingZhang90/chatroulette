@@ -167,7 +167,7 @@ const mlFaceHand = async () => {
 }
 
 const landmarksRealTime = async (video) => {
-  // setupDatGui();
+  setupDatGui();
 
   const stats = new Stats();
   stats.showPanel(0);
