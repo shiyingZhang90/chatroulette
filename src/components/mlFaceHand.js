@@ -150,7 +150,8 @@ function trans2D (array) {
 
 const mlFaceHand = async () => {
   // push.create("Hello World")
-  model = await handpose.load();
+  // let notify = new Notification('Hi there!');
+  model = await handpose.load({detectionConfidence: 0.9});
   model_face = await facemesh.load({maxFaces: 1});
   let video;
   try {
@@ -207,51 +208,58 @@ const landmarksRealTime = async (video) => {
 
   async function frameLandmarks() {
     stats.begin();
-    let finger_points;
+    let finger_points = [];
     // ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     const predictions = await model.estimateHands(video);
-    if (predictions.length > 0) {
-      const result = predictions[0].landmarks;
-      if (draw) {
-        requestAnimationFrame(() => {
-          drawKeypoints(ctx, result, predictions[0].annotations);
-        });
-      }
-      
-      // console.log("annotaions_hand", predictions[0].annotations)
-      var finger_tips = predictions[0].annotations.indexFinger.slice(2,4).concat(
-        predictions[0].annotations.middleFinger.slice(2,4),
-        predictions[0].annotations.ringFinger.slice(2,4),
-        predictions[0].annotations.pinky.slice(2,4)
-      )
-      finger_points = trans2D(finger_tips);
-
-      // console.log("finger_tips", finger_points)
-
-      if (renderPointcloud === true && scatterGL != null) {
-        const pointsData = result.map(point => {
-          return [-point[0], -point[1], -point[2]];
-        });
-
-        const dataset = new ScatterGL.Dataset([...pointsData, ...ANCHOR_POINTS]);
-
-        if (!scatterGLHasInitialized) {
-          scatterGL.render(dataset);
-
-          const fingers = Object.keys(fingerLookupIndices);
-
-          scatterGL.setSequences(fingers.map(finger => ({ indices: fingerLookupIndices[finger] })));
-          scatterGL.setPointColorer((index) => {
-            if (index < pointsData.length) {
-              return 'steelblue';
-            }
-            return 'white'; // Hide.
+    const threshold = 100;
+    if (predictions.length > 0 ) {
+      let boundingBoxW= predictions[0].boundingBox.bottomRight[1] - predictions[0].boundingBox.topLeft[1];
+      let boundingBoxH= predictions[0].boundingBox.bottomRight[0] - predictions[0].boundingBox.topLeft[0];
+      if (boundingBoxW >threshold && boundingBoxH > threshold) {
+        const result = predictions[0].landmarks;
+        console.log("hand palmBase", predictions[0].boundingBox)
+        if (draw) {
+          requestAnimationFrame(() => {
+            drawKeypoints(ctx, result, predictions[0].annotations);
           });
-        } else {
-          scatterGL.updateDataset(dataset);
         }
-        scatterGLHasInitialized = true;
+        
+        // console.log("annotaions_hand", predictions[0].annotations)
+        var finger_tips = predictions[0].annotations.indexFinger.slice(2,4).concat(
+          predictions[0].annotations.middleFinger.slice(2,4),
+          predictions[0].annotations.ringFinger.slice(2,4),
+          predictions[0].annotations.pinky.slice(2,4)
+        )
+        finger_points = trans2D(finger_tips);
+
+        // console.log("finger_tips", finger_points)
+
+        if (renderPointcloud === true && scatterGL != null) {
+          const pointsData = result.map(point => {
+            return [-point[0], -point[1], -point[2]];
+          });
+
+          const dataset = new ScatterGL.Dataset([...pointsData, ...ANCHOR_POINTS]);
+
+          if (!scatterGLHasInitialized) {
+            scatterGL.render(dataset);
+
+            const fingers = Object.keys(fingerLookupIndices);
+
+            scatterGL.setSequences(fingers.map(finger => ({ indices: fingerLookupIndices[finger] })));
+            scatterGL.setPointColorer((index) => {
+              if (index < pointsData.length) {
+                return 'steelblue';
+              }
+              return 'white'; // Hide.
+            });
+          } else {
+            scatterGL.updateDataset(dataset);
+          }
+          scatterGLHasInitialized = true;
+        }
       }
+
     }
 
     stats.end();
@@ -260,11 +268,14 @@ const landmarksRealTime = async (video) => {
     return finger_points;
   };
 
-  let polygon_lips, polygon_eye, polygon_nose, polygon_all;
+  
 
   async function frameLandmarksFace() {
+    let polygon_lips, polygon_eye, polygon_nose;
+    let polygon_all = {};
     stats.begin();
     const predictions_face = await model_face.estimateFaces(video);
+
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     if (predictions_face.length > 0) {
       predictions_face.forEach(prediction => {
@@ -285,9 +296,9 @@ const landmarksRealTime = async (video) => {
         polygon_nose = trans2D(polygonNose3d)
 
         polygon_all = {
-          polygonLips : polygon_lips,
-          polygonEye  : polygon_eye,
-          polygonNose : polygon_nose
+          polygonLips : polygon_lips || [],
+          polygonEye  : polygon_eye || [],
+          polygonNose : polygon_nose || []
         }
         if (draw) {
           requestAnimationFrame(() => {
@@ -315,133 +326,111 @@ const landmarksRealTime = async (video) => {
 
       });
       if (state.lowSpeedMode){
-        await sleep(200);
+        await delay(200);
       } 
     }
     
-
     //requestAnimationFrame(frameLandmarksFace);
     stats.end();
-    //console.log("return lips", polygon_lips)
+    // console.log("return polygon", polygon_all)
     return polygon_all
   }
 
   let notifyAllow = true;
-  function sleep(ms) {
+  function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async function monitorFaceTouch() {
     const facePromise = frameLandmarksFace();
     const fingerPromise = frameLandmarks();
-    const values = await Promise.all([facePromise, fingerPromise]);
+    const minDelay = delay(30);
+    
+    const values = await Promise.all([facePromise, fingerPromise, minDelay]);
 
-    const polygon_lips = values[0].polygonLips
-    const polygon_eye = values[0].polygonEye
-    const polygon_nose = values[0].polygonNose
-    const finger_points = values[1]
-    const lipsCnt = (polygon_lips || []).length;
-    const eyeCnt = (polygon_eye || []).length;
-    const noseCnt = (polygon_nose || []).length;
-    const fingerCnt = (finger_points || []).length;
-    let noseNumber, lipNumber, eyeNumber
-    // let fingerTouchNose = false;
-    // if(lipsCnt > 0 && fingerCnt > 0) {
-    //   for (let i=0; i< fingerCnt; i++) {
-    //     if (classifyPoint(polygon_nose, finger_points[i]) == -1) {
-    //       fingerTouchNose = true;
+    if (Object.keys(values && values[0] && values[0]).length === 0 && values[0].constructor === Object) {
+      // console.log("no polygon_all returned")
+    } else {
+      const polygon_lips = values[0].polygonLips
+      const polygon_eye = values[0].polygonEye
+      const polygon_nose = values[0].polygonNose
+      const finger_points = values[1]
+      const lipsCnt = (polygon_lips || []).length;
+      const eyeCnt = (polygon_eye || []).length;
+      const noseCnt = (polygon_nose || []).length;
+      const fingerCnt = (finger_points || []).length;
+      let noseNumber, lipNumber, eyeNumber
 
-    //     }
-    //   }
-    //   if ( fingerTouchNose == true) {
-    //     noseNumber++;
-    //     if (noseNumber == 60 ) {
-    //       push.create("You just touched your nose!", {
-    //         body: "Don't touch your face to avoid COVID-19",
-    //         timeout: 4000,
-    //         onClick: function () {
-    //             window.focus();
-    //             this.close();
-    //         }
-    //       });
-    //       // setTimeout(function() {
-    //       //   noseNumber = 0;
-    //       // }, 1000);
-    //     }
- 
-    //   } else {
-    //     noseNumber = 0
-    //   }
-    // }
-    let fingerTouchNose = false;
-    if(noseCnt > 0 && fingerCnt > 0) {
-      for (let i=0; i< fingerCnt; i++) {
-        if (classifyPoint(polygon_nose, finger_points[i]) == -1) {
-          fingerTouchNose = true;
+      let fingerTouchNose = false;
+      if(noseCnt > 0 && fingerCnt > 0) {
+        for (let i=0; i< fingerCnt; i++) {
+          if (classifyPoint(polygon_nose, finger_points[i]) == -1) {
+            fingerTouchNose = true;
+          }
+        }
+        if ( (fingerTouchNose == true) && notifyAllow == true ) {
+          console.log("touched your nose")
+          push.create("You just touched your nose!", {
+              body: "Don't touch your face to avoid COVID-19",
+              timeout: 4000,
+              onClick: function () {
+                  window.focus();
+                  this.close();
+              }
+          });
+          notifyAllow = false;
+          setTimeout(function() {
+            notifyAllow = true;
+          }, 1000); 
         }
       }
-      if ( (fingerTouchNose == true) && notifyAllow == true ) {
-        console.log("touched your nose")
-        push.create("You just touched your nose!", {
-            body: "Don't touch your face to avoid COVID-19",
-            timeout: 4000,
-            onClick: function () {
-                window.focus();
-                this.close();
-            }
-        });
-        notifyAllow = false;
-        setTimeout(function() {
-          notifyAllow = true;
-        }, 1000); 
-      }
-    }
 
-    let fingerTouchFace = false;
-    if(lipsCnt > 0 && fingerCnt > 0) {
-      for (let i=0; i< fingerCnt; i++) {
-        if (classifyPoint(polygon_lips, finger_points[i]) == -1) {
-          fingerTouchFace = true;
+      let fingerTouchFace = false;
+      if(lipsCnt > 0 && fingerCnt > 0) {
+        for (let i=0; i< fingerCnt; i++) {
+          if (classifyPoint(polygon_lips, finger_points[i]) == -1) {
+            fingerTouchFace = true;
+          }
+        }
+        if ( (fingerTouchFace == true) && notifyAllow == true ) {
+          console.log("touched your mouth")
+          push.create("You just touched your mouth!", {
+              body: "Don't touch your face to avoid COVID-19",
+              timeout: 4000,
+              onClick: function () {
+                  window.focus();
+                  this.close();
+              }
+          });
+          notifyAllow = false;
+          setTimeout(function() {
+            notifyAllow = true;
+          }, 1000); 
         }
       }
-      if ( (fingerTouchFace == true) && notifyAllow == true ) {
-        console.log("touched your mouth")
-        push.create("You just touched your mouth!", {
-            body: "Don't touch your face to avoid COVID-19",
-            timeout: 4000,
-            onClick: function () {
-                window.focus();
-                this.close();
-            }
-        });
-        notifyAllow = false;
-        setTimeout(function() {
-          notifyAllow = true;
-        }, 1000); 
-      }
-    }
-    let fingerTouchEye = false;
-    if(eyeCnt > 0 && fingerCnt > 0) {
-      console.log("touched your eye")
-      for (let i=0; i< fingerCnt; i++) {
-        if (classifyPoint(polygon_eye, finger_points[i]) == -1) {
-          fingerTouchEye = true;
+      let fingerTouchEye = false;
+      if(eyeCnt > 0 && fingerCnt > 0) {
+        console.log("touched your eye")
+        for (let i=0; i< fingerCnt; i++) {
+          if (classifyPoint(polygon_eye, finger_points[i]) == -1) {
+            fingerTouchEye = true;
+          }
         }
-      }
-      if ( (fingerTouchEye == true) && notifyAllow == true ) {
-        push.create("You just touched your eye!", {
-            body: "Don't touch your face to avoid COVID-19",
-            icon: './virus.png',
-            timeout: 4000,
-            onClick: function () {
-                window.focus();
-                this.close();
-            }
-        });
-        notifyAllow = false;
-        setTimeout(function() {
-          notifyAllow = true;
-        }, 1000); 
+        if ( (fingerTouchEye == true) && notifyAllow == true ) {
+          push.create("You just touched your eye!", {
+              body: "Don't touch your face to avoid COVID-19",
+              icon: './virus.png',
+              timeout: 4000,
+              onClick: function () {
+                  window.focus();
+                  this.close();
+              }
+          });
+          notifyAllow = false;
+          setTimeout(function() {
+            notifyAllow = true;
+          }, 1000); 
+        }
       }
     }
 

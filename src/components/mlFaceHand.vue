@@ -28,7 +28,7 @@
       <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
     </div>
     <div class="notice">
-      <h3 class = "body">Please send feedback to hongguo.chu@gmail.com and we will work on it right away</h3>
+      <h3 class = "body">Toggle lowSpeedMode on top right to run it silent mode. Add it to default open tab so you will always get protected</h3>
     </div>  
   </div>
   <div id="scatter-gl-container"></div>
