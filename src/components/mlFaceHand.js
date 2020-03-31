@@ -149,8 +149,7 @@ function trans2D (array) {
 }
 
 const mlFaceHand = async () => {
-  push.create("Hello World")
-  let notify = new Notification('Hi there!');
+  // push.create("Hello World")
   model = await handpose.load();
   model_face = await facemesh.load({maxFaces: 1});
   let video;
