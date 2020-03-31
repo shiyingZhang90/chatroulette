@@ -203,7 +203,7 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-  }, 10000);
+  }, 25000);
 
   async function frameLandmarks() {
     stats.begin();
