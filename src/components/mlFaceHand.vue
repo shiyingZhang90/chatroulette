@@ -40,28 +40,64 @@
 
 <script>
 import mlFaceHand from './mlFaceHand'
+// import tryRecursion from './mlFaceHand'
 import Vue from 'vue'
 import Push from 'push.js';
 export default {
+  name: 'worker-test', 
+  // data() {
+  //   return {
+  //     worker: null,
+  //   }
+  // },
+  mounted() {
+    // let data 
+    // this.worker.postMessage('pull-data', [data])
+    //   .then(res => console.log(res)) 
+  },
+  destroyed() {
+    this.worker = null
+  },
   created () {
-    if (!Push.Permission.has()) {
-      Push.Permission.request();
-    }
+    // let cnt = 0;
+    // setInterval(function(){ console.log("Hello ", cnt++); }, 1000);
+
+    // const hello = () => {
+    //   console.log('shsh hello')
+    // };
+
     // this.$worker.run((args) => {
-    //   {args};
+    //   {args}
+    //   // const funcStr = args[0];
+    //   // //var argName = funcStr.substring(funcStr.indexOf("(") + 1, funcStr.indexOf(")"));
+    //   // //funcStr = funcStr.substring(funcStr.indexOf("{") + 1, funcStr.lastIndexOf("}"));
+    //   // const f = new Function('', funcStr);
+
     //   return `Hello!`
-    // }, [this.openCamera()])
+    // }, [this.hello])
     // .then(result => {
     //   console.log(result)
     // })
     // .catch(e => {
     //   console.error(e)
     // })
+    // this.worker = this.$worker.create([
+    //   {
+    //     message: 'pull-data',
+    //     func(data) {
+    //       for(var i=0; i<1000; i++) {
+    //         data++;
+    //         return i
+    //       }
+    //     }
+    //   }
+    // ]),
     this.openCamera();
   },
   methods: {
     openCamera () {
       mlFaceHand();
+      // tryRecursion();
     } 
   }
 }

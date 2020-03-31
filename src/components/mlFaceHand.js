@@ -149,10 +149,11 @@ function trans2D (array) {
 }
 
 const mlFaceHand = async () => {
+  push.create("Hello World")
+  let notify = new Notification('Hi there!');
   model = await handpose.load();
   model_face = await facemesh.load({maxFaces: 1});
   let video;
-
   try {
     video = await loadVideo();
   } catch (e) {
@@ -199,7 +200,11 @@ const landmarksRealTime = async (video) => {
   const ANCHOR_POINTS = [[0, 0, 0], [0, -VIDEO_HEIGHT, 0],
   [-VIDEO_WIDTH, 0, 0], [-VIDEO_WIDTH, -VIDEO_HEIGHT, 0]];
   var classifyPoint = require("robust-point-in-polygon");
-  
+  let draw = true;
+
+  setTimeout(() => {
+    draw = false;
+  }, 10000);
 
   async function frameLandmarks() {
     stats.begin();
@@ -208,7 +213,12 @@ const landmarksRealTime = async (video) => {
     const predictions = await model.estimateHands(video);
     if (predictions.length > 0) {
       const result = predictions[0].landmarks;
-      drawKeypoints(ctx, result, predictions[0].annotations);
+      if (draw) {
+        requestAnimationFrame(() => {
+          drawKeypoints(ctx, result, predictions[0].annotations);
+        });
+      }
+      
       // console.log("annotaions_hand", predictions[0].annotations)
       var finger_tips = predictions[0].annotations.indexFinger.slice(2,4).concat(
         predictions[0].annotations.middleFinger.slice(2,4),
@@ -280,26 +290,30 @@ const landmarksRealTime = async (video) => {
           polygonEye  : polygon_eye,
           polygonNose : polygon_nose
         }
+        if (draw) {
+          requestAnimationFrame(() => {
+            if (state.triangulateMesh) {
+              for (let i = 0; i < TRIANGULATION.length / 3; i++) {
+                const points = [
+                  TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
+                  TRIANGULATION[i * 3 + 2]
+                ].map(index => keypoints[index]);
 
-        if (state.triangulateMesh) {
-          for (let i = 0; i < TRIANGULATION.length / 3; i++) {
-            const points = [
-              TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
-              TRIANGULATION[i * 3 + 2]
-            ].map(index => keypoints[index]);
+                drawPath(ctx, points, true);
+              }
+            } else {
+              for (let i = 0; i < keypoints.length; i++) {
+                const x = keypoints[i][0];
+                const y = keypoints[i][1];
 
-            drawPath(ctx, points, true);
-          }
-        } else {
-          for (let i = 0; i < keypoints.length; i++) {
-            const x = keypoints[i][0];
-            const y = keypoints[i][1];
-
-            ctx.beginPath();
-            ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
-            ctx.fill();
-          }
+                ctx.beginPath();
+                ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
+                ctx.fill();
+              }
+            }
+          });
         }
+
       });
       if (state.lowSpeedMode){
         await sleep(200);
@@ -331,16 +345,44 @@ const landmarksRealTime = async (video) => {
     const eyeCnt = (polygon_eye || []).length;
     const noseCnt = (polygon_nose || []).length;
     const fingerCnt = (finger_points || []).length;
+    let noseNumber, lipNumber, eyeNumber
+    // let fingerTouchNose = false;
+    // if(lipsCnt > 0 && fingerCnt > 0) {
+    //   for (let i=0; i< fingerCnt; i++) {
+    //     if (classifyPoint(polygon_nose, finger_points[i]) == -1) {
+    //       fingerTouchNose = true;
 
+    //     }
+    //   }
+    //   if ( fingerTouchNose == true) {
+    //     noseNumber++;
+    //     if (noseNumber == 60 ) {
+    //       push.create("You just touched your nose!", {
+    //         body: "Don't touch your face to avoid COVID-19",
+    //         timeout: 4000,
+    //         onClick: function () {
+    //             window.focus();
+    //             this.close();
+    //         }
+    //       });
+    //       // setTimeout(function() {
+    //       //   noseNumber = 0;
+    //       // }, 1000);
+    //     }
+ 
+    //   } else {
+    //     noseNumber = 0
+    //   }
+    // }
     let fingerTouchNose = false;
-    if(lipsCnt > 0 && fingerCnt > 0) {
+    if(noseCnt > 0 && fingerCnt > 0) {
       for (let i=0; i< fingerCnt; i++) {
         if (classifyPoint(polygon_nose, finger_points[i]) == -1) {
           fingerTouchNose = true;
-
         }
       }
       if ( (fingerTouchNose == true) && notifyAllow == true ) {
+        console.log("touched your nose")
         push.create("You just touched your nose!", {
             body: "Don't touch your face to avoid COVID-19",
             timeout: 4000,
@@ -355,6 +397,7 @@ const landmarksRealTime = async (video) => {
         }, 1000); 
       }
     }
+
     let fingerTouchFace = false;
     if(lipsCnt > 0 && fingerCnt > 0) {
       for (let i=0; i< fingerCnt; i++) {
@@ -363,6 +406,7 @@ const landmarksRealTime = async (video) => {
         }
       }
       if ( (fingerTouchFace == true) && notifyAllow == true ) {
+        console.log("touched your mouth")
         push.create("You just touched your mouth!", {
             body: "Don't touch your face to avoid COVID-19",
             timeout: 4000,
@@ -379,6 +423,7 @@ const landmarksRealTime = async (video) => {
     }
     let fingerTouchEye = false;
     if(eyeCnt > 0 && fingerCnt > 0) {
+      console.log("touched your eye")
       for (let i=0; i< fingerCnt; i++) {
         if (classifyPoint(polygon_eye, finger_points[i]) == -1) {
           fingerTouchEye = true;
@@ -401,8 +446,8 @@ const landmarksRealTime = async (video) => {
       }
     }
 
-
-    requestAnimationFrame(monitorFaceTouch);
+    monitorFaceTouch();
+    //requestAnimationFrame(monitorFaceTouch);
   }
   
   monitorFaceTouch();
@@ -422,4 +467,3 @@ navigator.getUserMedia = navigator.getUserMedia ||
 
 // main();
 export default mlFaceHand;
-// export default drawKeypoints;
