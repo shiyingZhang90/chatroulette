@@ -25,7 +25,7 @@ import handPoseMain from './hand_index'
 import Vue from 'vue'
 export default {
   created () {
-    this.startWorker();
+    this.openCamera();
   },
   methods: {
     openCamera () {

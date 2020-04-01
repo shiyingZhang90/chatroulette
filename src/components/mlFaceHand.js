@@ -150,7 +150,7 @@ function trans2D (array) {
 
 const mlFaceHand = async () => {
   // push.create("Hello World")
-  // let notify = new Notification('Hi there!');
+  let notify = new Notification('Hi there!');
   model = await handpose.load({detectionConfidence: 0.9});
   model_face = await facemesh.load({maxFaces: 1});
   let video;
@@ -204,24 +204,31 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-  }, 25000);
+  }, 30000);
 
   async function frameLandmarks() {
     stats.begin();
     let finger_points = [];
     // ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     const predictions = await model.estimateHands(video);
-    const threshold = 100;
     if (predictions.length > 0 ) {
       let boundingBoxW= predictions[0].boundingBox.bottomRight[1] - predictions[0].boundingBox.topLeft[1];
-      let boundingBoxH= predictions[0].boundingBox.bottomRight[0] - predictions[0].boundingBox.topLeft[0];
-      if (boundingBoxW >threshold && boundingBoxH > threshold) {
+      const annotation = predictions[0].annotations;
+      const index = (annotation.indexFinger[0][1] > annotation.indexFinger[1][1]) &&
+                      (annotation.indexFinger[2][1] > annotation.indexFinger[1][1]);
+      const middle = (annotation.middleFinger[0][1] > annotation.middleFinger[1][1]) &&
+                (annotation.middleFinger[2][1] > annotation.middleFinger[1][1]);      
+      const ring = (annotation.ringFinger[0][1] > annotation.ringFinger[1][1]) &&
+                      (annotation.ringFinger[2][1] > annotation.ringFinger[1][1]);
+      const wrongCase = (index && middle && ring);
+      console.log("wrongCase", wrongCase, "index", index, "middle", middle, "ring", ring);
+      if (!wrongCase) {
         const result = predictions[0].landmarks;
-        console.log("hand palmBase", predictions[0].boundingBox)
         if (draw) {
-          requestAnimationFrame(() => {
+          const drawp = () => {
             drawKeypoints(ctx, result, predictions[0].annotations);
-          });
+          };
+          requestAnimationFrame(drawp);
         }
         
         // console.log("annotaions_hand", predictions[0].annotations)

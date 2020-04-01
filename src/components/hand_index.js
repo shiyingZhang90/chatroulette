@@ -61,7 +61,6 @@ function setupDatGui() {
 function drawPoint(ctx, y, x, r) {
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 2 * Math.PI);
-  console.log("drawPoint"+x+y+r)
   ctx.fill();
 }
 
@@ -72,7 +71,6 @@ function drawKeypoints(ctx, keypoints) {
     const y = keypointsArray[i][0];
     const x = keypointsArray[i][1];
     drawPoint(ctx, x - 2, y - 2, 3);
-    console.log("drawKeyPoint"+x+y)
   }
 
   const fingers = Object.keys(fingerLookupIndices);
@@ -185,11 +183,17 @@ const landmarksRealTime = async (video) => {
     stats.begin();
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
     const predictions = await model.estimateHands(video);
-    console.log("hand")
-    console.log(predictions.length)
     if (predictions.length > 0) {
       const result = predictions[0].landmarks;
-      console.log("prediction result is "+result)
+      console.log("prediction result is ", predictions[0].annotations)
+      const annotation = predictions[0].annotations;
+      const index = (annotation.indexFinger[0][1] > annotation.indexFinger[1][1]) &&
+                      (annotation.indexFinger[2][1] > annotation.indexFinger[1][1]);
+      const middle = (annotation.middleFinger[0][1] > annotation.middleFinger[1][1]) &&
+                (annotation.middleFinger[2][1] > annotation.middleFinger[1][1]);      
+      const ring = (annotation.ringFinger[0][1] > annotation.ringFinger[1][1]) &&
+                      (annotation.ringFinger[2][1] > annotation.ringFinger[1][1]);
+      console.log("Wrong CASE index is", index, "middle is ", middle, "ring is", ring);
       drawKeypoints(ctx, result, predictions[0].annotations);
 
       if (renderPointcloud === true && scatterGL != null) {
