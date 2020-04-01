@@ -22,8 +22,9 @@
           </div> 
         </div>
       </div>
-      <div class = "footer explanation p-2 my-2">
-      <h3>Please use it on laptop for better experience</h3>
+      <div class = "footer explanation mx-3">
+        <h4 >co-avoid.com</h4>
+        <h6>Please open co-avoid.com on laptop. Mobile not supported yet but we are working on it</h6>
       </div>
       <div class="col-lg">
         <div class="mt-3">
@@ -34,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div class="embed-responsive embed-responsive-16by9 mx-auto my-2">
+    <div class="embed-responsive embed-responsive-16by9 mx-auto my-3">
       <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
     </div>
   </div>
@@ -44,7 +45,6 @@
 
 <script>
 import mlFaceHand from './mlFaceHand'
-// import tryRecursion from './mlFaceHand'
 import Vue from 'vue'
 import Push from 'push.js';
 export default {
@@ -55,6 +55,11 @@ export default {
   //   }
   // },
   mounted() {
+    this.$ga.page({
+      page: '/',
+      title: 'CoAvoid',
+      location: window.location.href
+    })
     // let data 
     // this.worker.postMessage('pull-data', [data])
     //   .then(res => console.log(res)) 
@@ -63,12 +68,6 @@ export default {
     this.worker = null
   },
   created () {
-    // let cnt = 0;
-    // setInterval(function(){ console.log("Hello ", cnt++); }, 1000);
-
-    // const hello = () => {
-    //   console.log('shsh hello')
-    // };
 
     // this.$worker.run((args) => {
     //   {args}
