@@ -1,40 +1,44 @@
 <template>
-<div>  
-  <b-navbar toggleable="lg" type="dark" variant="info" class = "header">
-
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <b-nav-item href="#" class = "logo">Magic Coavoid</b-nav-item>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
-  <div id="predictions"></div>
-  <div id="canvas-wrapper">
-    <canvas id="output" style=""></canvas>
-    <video id="video" playsinline style="
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    visibility: hidden;
-    width: auto;
-    height: auto;
-    position: absolute;
-    ">
-    </video>
-    <div class="explanation">
-      <h1 class = "title">Magic Coavoid</h1>
-      <h3 class = "body">The CDC lists "avoid touching your eyes, nose, and mouse" as critical measure to avoid COVID-19.</h3>
-      <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
+<div class="container-fluid">
+  <div class="header m-0 py-3">
+    <div class="container">
+      <h1 class="logo ml-2">CoAvoid</h1>
     </div>
-    <div class="notice">
-      <h3 class = "body">Toggle lowSpeedMode on top right to run it silent mode. Add it to default open tab so you will always get protected</h3>
-    </div>  
   </div>
-  <div id="scatter-gl-container"></div>
-  <div class="embed-responsive embed-responsive-16by9 w-50 mx-auto">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
+  <div id="predictions"></div>
+  <div class="container px-0 my-4">
+    <div class="row">
+      <div class="col-lg">
+        <div class="h-100 d-flex align-items-center">
+          <div class = "text-body">
+            <div class="explanation p-2">
+              <h1 >Magic Coavoid</h1>
+              <h3 class = "body">The CDC lists "avoid touching your eyes, nose, and mouse" as critical measure to avoid COVID-19.</h3>
+              <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
+            </div>
+            <div class="notice">
+              <h3 class = "body">Toggle lowSpeedMode on top right to run it silent mode. Add it to default open tab so you will always get protected</h3>
+            </div> 
+          </div> 
+        </div>
+      </div>
+      <div class = "footer explanation p-2 my-2">
+      <h3>Please use it on laptop for better experience</h3>
+      </div>
+      <div class="col-lg">
+        <div class="mt-3">
+          <div class="embed-responsive embed-responsive-4by3">
+            <canvas id="output" class="embed-responsive-item"></canvas>
+          </div>
+          <video id="video" playsinline class="video"/>
+        </div>
+      </div>
+    </div>
+    <div class="embed-responsive embed-responsive-16by9 mx-auto my-2">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
+    </div>
   </div>
+
 </div>  
 </template>
 
@@ -118,8 +122,19 @@ export default {
   #scatter-gl-container {
     position: relative;
   }
-  #output {
-    float:left;
+
+  .canvas-container {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    position: absolute;
   }
 
   /* center the canvas within its wrapper */
@@ -130,37 +145,25 @@ export default {
     position: absolute;
   }
   .explanation {
-    overflow: hidden;
-    margin-left: 780px;
-    margin-top: 60px;
     background-color: lightblue;
     color: white;
-    margin-right: 20px;
   }
   .notice {
-    margin-left: 780px;
-    margin-top: 30px;
     background-color: lightpink;
     color: white;
-    margin-right: 20px;
   }
-  .title {
-    font-size: 50px;
-    margin: 20px;
-  }
+
   .header {
-    height: 160px;
+    text-align: left;
+    background: #00CED1;
+    color: white;
+    font-size: 30px;
   }
   .body {
     margin-top:  20px;
     margin-bottom: 20px;
     margin-right: 30px;
     margin: 20px;
-  }
-  .logo {
-    font-size: 80px;
-    margin-left: 150px;
-    color: "white";
   }
   .button-sm {
     background-color: #96B9F8;
@@ -173,9 +176,7 @@ export default {
     margin: 6px 10px;
     border-radius: 20px;
   }
-  .iframe iframe {
-    width : 1000px;
-    height: 1000px;
+  .iframe {
     display: inline-block;
   }
   .control {
@@ -184,8 +185,36 @@ export default {
       margin-right: 30px;
     }
   }
-  .header {
-    margin-right: 10px;
+  .logo {
+    font-size: 250%;
+    color: "white";
   }
+  @media (max-width: 576px) {  
+    .logo {
+      font-size:1.5rem;
+    } /*1rem = 16px*/
+  }
+   
+  /* Small devices (landscape phones, 576px and up)*/
+  @media (max-width: 767px) {  
+    h1 {font-size:2rem;} /*1rem = 16px*/
+    .logo {
+      font-size:85%;
+    } /*1rem = 16px*/
+    .text-body {
+      display: none;
+    }
+
+  }
+   
+
+  @media (min-width: 768px) { 
+    h1 {font-size:2.5rem;} /*1rem = 16px*/
+    .footer {
+      display: none;
+    }
+  }
+   
+
 
 </style>
