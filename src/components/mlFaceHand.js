@@ -103,6 +103,7 @@ function drawKeypoints(ctx, keypoints) {
     const points = fingerLookupIndices[finger].map(idx => keypoints[idx]);
     drawPath(ctx, points, false);
   }
+
 }
 
 function drawPath(ctx, points, closePath) {
@@ -117,6 +118,7 @@ function drawPath(ctx, points, closePath) {
     region.closePath();
   }
   ctx.stroke(region);
+
 }
 
 let model, model_face;
@@ -211,12 +213,13 @@ const mlFaceHand = async () => {
   landmarksRealTime(video);
 
   model = await handpose.load({detectionConfidence: 0.9});
+
 }
 
 
 
 const landmarksRealTime = async (video) => {
-  // setupDatGui();
+  setupDatGui();
 
   const stats = new Stats();
   stats.showPanel(0);
@@ -242,6 +245,8 @@ const landmarksRealTime = async (video) => {
 
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
+  
+
 
   // These anchor points allow the hand pointcloud to resize according to its
   // position in the input.
@@ -252,7 +257,8 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-  }, 20000);
+    lowSpeedMode = true;
+  }, 30000);
 
   async function frameLandmarks() {
     stats.begin();
@@ -383,6 +389,7 @@ const landmarksRealTime = async (video) => {
       });
       if (state.lowSpeedMode){
         await delay(200);
+        console.log("low speed now")
       } 
     }
     
@@ -397,10 +404,18 @@ const landmarksRealTime = async (video) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  
+  async function drawAttention(){
+    ctx.fillStyle = "#32EEDB";
+    ctx.fillRect(25, 35, 90, 80);
+    ctx.textBaseline = "top";
+    ctx.fillStyle = '#FF0000';
+    ctx.font = "60px Arial";
+    ctx.fillText("on", 35, 40);
+    ctx.fillStyle = "#32EEDB";
+  }
 
   async function monitorFaceTouch() {
-    const facePromise = frameLandmarksFace();
+    const facePromise = model_face ? frameLandmarksFace() : Promise.resolve([]);
     const fingerPromise = model ? frameLandmarks() : Promise.resolve([]);
     const minDelay = delay(30);
     const values = await Promise.all([facePromise, fingerPromise, minDelay]);
@@ -435,6 +450,7 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          drawAttention();
           analytics.track('TouchNose', {
             category: 'Notification',
             label: 'javascript',
@@ -463,6 +479,7 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          drawAttention();
           analytics.track('TouchMouth', {
             category: 'Notification',
             label: 'javascript',
@@ -491,6 +508,7 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          drawAttention();
           analytics.track('TouchMouth', {
             category: 'Notification',
             label: 'javascript',

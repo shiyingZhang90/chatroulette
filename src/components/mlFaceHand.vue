@@ -17,7 +17,7 @@
               <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
             </div>
             <div class="notice">
-              <h3 class = "body">All data is processed locally on your computer and not sent to the Internet. Add it to default open tab so you will always get protected</h3>
+              <h3 class = "body">Please grant access to notification and camera so you will be protected. All data is processed locally on your computer and not sent to the Internet.</h3>
             </div> 
           </div> 
         </div>
@@ -28,10 +28,11 @@
       </div>
       <div class="col-lg">
         <div class="mt-3">
+          <h5 class="notice text-center"> FaceMesh take time to load, be patient. If no notification, you will see "no" pop up in below video</h5>
           <div class="embed-responsive embed-responsive-4by3">
-            <canvas id="output" class="embed-responsive-item"></canvas>
+            <canvas id="output" class="output embed-responsive-item"></canvas>
+            <video id="video" playsinline class="video"/>
           </div>
-          <video id="video" playsinline class="video"/>
         </div>
       </div>
     </div>
@@ -130,10 +131,16 @@ export default {
   .video {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
-    visibility: hidden;
+    display: inline-block;
+/*    visibility: hidden;*/
     width: 100%;
     height: 100%;
     position: absolute;
+  }
+  .output {
+    z-index: 100;
+    position: absolute;
+    display: inline-block;
   }
 
   /* center the canvas within its wrapper */
