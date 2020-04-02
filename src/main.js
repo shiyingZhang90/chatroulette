@@ -14,6 +14,8 @@ import Stats from 'stats.js'
 import LoadScript from 'vue-plugin-load-script'
 import VueWorker from 'vue-worker'
 import VueFriendlyIframe from 'vue-friendly-iframe';
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
 
 Vue.component('vue-friendly-iframe', VueFriendlyIframe);
 Vue.use(VueWorker) 
@@ -32,6 +34,15 @@ Vue.use(VueAnalytics, {
 })
 
 Vue.config.productionTip = false
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-161594606-1'
+    })
+  ]
+})
 
 new Vue({
   store,

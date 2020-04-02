@@ -21,6 +21,18 @@ import {TRIANGULATION} from './triangulation';
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 import {version} from '@tensorflow/tfjs-backend-wasm/dist/version';
 import push from 'push.js';
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-161594606-1'
+    })
+  ]
+})
 
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
@@ -167,6 +179,8 @@ const mlFaceHand = async () => {
   landmarksRealTime(video);
 }
 
+
+
 const landmarksRealTime = async (video) => {
   // setupDatGui();
 
@@ -221,7 +235,7 @@ const landmarksRealTime = async (video) => {
       const ring = (annotation.ringFinger[0][1] > annotation.ringFinger[1][1]) &&
                       (annotation.ringFinger[2][1] > annotation.ringFinger[1][1]);
       const wrongCase = (index && middle && ring);
-      console.log("wrongCase", wrongCase, "index", index, "middle", middle, "ring", ring);
+
       if (!wrongCase) {
         const result = predictions[0].landmarks;
         if (draw) {
@@ -348,6 +362,8 @@ const landmarksRealTime = async (video) => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  
+
   async function monitorFaceTouch() {
     const facePromise = frameLandmarksFace();
     const fingerPromise = frameLandmarks();
@@ -376,7 +392,7 @@ const landmarksRealTime = async (video) => {
           }
         }
         if ( (fingerTouchNose == true) && notifyAllow == true ) {
-          console.log("touched your nose")
+
           push.create("You just touched your nose!", {
               body: "Don't touch your face to avoid COVID-19",
               timeout: 4000,
@@ -385,6 +401,11 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          analytics.track('TouchNose', {
+            category: 'Notification',
+            label: 'javascript',
+            value: 42
+          })
           notifyAllow = false;
           setTimeout(function() {
             notifyAllow = true;
@@ -400,7 +421,6 @@ const landmarksRealTime = async (video) => {
           }
         }
         if ( (fingerTouchFace == true) && notifyAllow == true ) {
-          console.log("touched your mouth")
           push.create("You just touched your mouth!", {
               body: "Don't touch your face to avoid COVID-19",
               timeout: 4000,
@@ -409,6 +429,11 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          analytics.track('TouchMouth', {
+            category: 'Notification',
+            label: 'javascript',
+            value: 41
+          })
           notifyAllow = false;
           setTimeout(function() {
             notifyAllow = true;
@@ -417,7 +442,6 @@ const landmarksRealTime = async (video) => {
       }
       let fingerTouchEye = false;
       if(eyeCnt > 0 && fingerCnt > 0) {
-        console.log("touched your eye")
         for (let i=0; i< fingerCnt; i++) {
           if (classifyPoint(polygon_eye, finger_points[i]) == -1) {
             fingerTouchEye = true;
@@ -433,6 +457,11 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          analytics.track('TouchMouth', {
+            category: 'Notification',
+            label: 'javascript',
+            value: 41
+          })
           notifyAllow = false;
           setTimeout(function() {
             notifyAllow = true;
@@ -462,3 +491,4 @@ navigator.getUserMedia = navigator.getUserMedia ||
 
 // main();
 export default mlFaceHand;
+
