@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="embed-responsive embed-responsive-16by9 mx-auto my-3">
-      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/BtulL3oArQw?autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay="1"></iframe>
+      <iframe class="embed-responsive-item" src="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-facts-infographic" allowfullscreen ></iframe>
     </div>
   </div>
 
