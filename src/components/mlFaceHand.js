@@ -148,8 +148,12 @@ async function setupCamera() {
 }
 
 async function loadVideo() {
-  const video = await setupCamera();
+  const video = await setupCamera()
+
+
   video.play();
+
+  
   return video;
 }
 
@@ -161,10 +165,40 @@ function trans2D (array) {
 }
 
 const mlFaceHand = async () => {
-  // push.create("Hello World")
-  let notify = new Notification('Hi there!');
-  model = await handpose.load({detectionConfidence: 0.9});
-  model_face = await facemesh.load({maxFaces: 1});
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    let notification = new Notification("Hi there!");
+    console.log("already graneted")
+  }
+
+  else if (Notification.permission === "default" | Notification.permission === "denied") {
+    console.log("in deny loop")
+    Notification.requestPermission().then(function (permission) {
+      console.log("permission in loop", permission)
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        let notification = new Notification("Hi there!");
+      }
+    });
+  }
+
+  
+  const faceModelPromise = facemesh.load({maxFaces: 1});
+  //const videoPromise =  loadVideo().catch(() => );
+  const values = await Promise.all([faceModelPromise]);
+  model_face = values[0];
+  //let video = values[1];
+  //landmarksRealTime(video);
+
+ 
+  //model = await handpose.load({detectionConfidence: 0.9});
+  //model_face = await facemesh.load({maxFaces: 1});
+
   let video;
   try {
     video = await loadVideo();
@@ -174,9 +208,9 @@ const mlFaceHand = async () => {
     info.style.display = 'block';
     throw e;
   }
-
-  
   landmarksRealTime(video);
+
+  model = await handpose.load({detectionConfidence: 0.9});
 }
 
 
@@ -218,7 +252,7 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-  }, 25000);
+  }, 20000);
 
   async function frameLandmarks() {
     stats.begin();
@@ -289,7 +323,8 @@ const landmarksRealTime = async (video) => {
     return finger_points;
   };
 
-  
+
+
 
   async function frameLandmarksFace() {
     let polygon_lips, polygon_eye, polygon_nose;
@@ -366,9 +401,8 @@ const landmarksRealTime = async (video) => {
 
   async function monitorFaceTouch() {
     const facePromise = frameLandmarksFace();
-    const fingerPromise = frameLandmarks();
+    const fingerPromise = model ? frameLandmarks() : Promise.resolve([]);
     const minDelay = delay(30);
-    
     const values = await Promise.all([facePromise, fingerPromise, minDelay]);
 
     if (Object.keys(values && values[0] && values[0]).length === 0 && values[0].constructor === Object) {
@@ -474,7 +508,8 @@ const landmarksRealTime = async (video) => {
     //requestAnimationFrame(monitorFaceTouch);
   }
   
-  monitorFaceTouch();
+
+  monitorFaceTouch()
 
   if (renderPointcloud) {
     document.querySelector('#scatter-gl-container').style =
