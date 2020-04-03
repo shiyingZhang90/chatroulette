@@ -3,6 +3,7 @@
   <div class="header m-0 py-3">
     <div class="container">
       <h1 class="logo ml-2">CoAvoid</h1>
+      <h5 id="info" class="notice"></h5>
     </div>
   </div>
   <div id="predictions"></div>
@@ -28,7 +29,7 @@
       </div>
       <div class="col-lg">
         <div class="mt-3">
-          <h5 class="notice text-center"> FaceMesh take time to load, be patient. If no notification, you will see "no" pop up in below video</h5>
+          <h5 class="notice text-center"> FaceMesh take time to load, be patient</h5>
           <div class="embed-responsive embed-responsive-4by3">
             <canvas id="output" class="output embed-responsive-item"></canvas>
             <video id="video" playsinline class="video"/>

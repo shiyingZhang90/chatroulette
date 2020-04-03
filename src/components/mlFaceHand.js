@@ -40,9 +40,9 @@ function isMobile() {
   return isAndroid || isiOS;
 }
 
-tfjsWasm.setWasmPath(
-    `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
-        version}/dist/tfjs-backend-wasm.wasm`);
+// tfjsWasm.setWasmPath(
+//     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
+//         version}/dist/tfjs-backend-wasm.wasm`);
 
 let videoWidth, videoHeight, scatterGLHasInitialized = false, scatterGL,
   fingerLookupIndices = {
@@ -62,7 +62,7 @@ const mobile = isMobile();
 const renderPointcloud = false;
 
 const state = {
-  backend: 'wasm',
+  // backend: 'wasm',
   triangulateMesh: true,
   lowSpeedMode: false
 };
@@ -131,15 +131,22 @@ async function setupCamera() {
 
   const video = document.getElementById('video');
   const stream = await navigator.mediaDevices.getUserMedia({
-    'audio': false,
-    'video': {
-      facingMode: 'user',
-      // Only setting the video to a specified size in order to accommodate a
-      // point cloud, so on mobile devices accept the default size.
-      width: mobile ? undefined : VIDEO_WIDTH,
-      height: mobile ? undefined : VIDEO_HEIGHT
+      'audio': false,
+      'video': {
+        facingMode: 'user',
+        // Only setting the video to a specified size in order to accommodate a
+        // point cloud, so on mobile devices accept the default size.
+        width: mobile ? undefined : VIDEO_WIDTH,
+        height: mobile ? undefined : VIDEO_HEIGHT
+      }
     },
-  });
+       // errorCallback
+   function(err) {
+    if(err === PERMISSION_DENIED) {
+      // Explain why you need permission and how to update the permission setting
+    }
+   }
+  );
   video.srcObject = stream;
 
   return new Promise((resolve) => {
@@ -185,6 +192,11 @@ const mlFaceHand = async () => {
       // If the user accepts, let's create a notification
       if (permission === "granted") {
         let notification = new Notification("Hi there!");
+      } 
+      else {
+        let info = document.getElementById('info');
+        info.textContent = 'notification access needed to notify you even you leave this website. Please grant';
+        info.style.display = 'block';
       }
     });
   }
@@ -205,8 +217,8 @@ const mlFaceHand = async () => {
   try {
     video = await loadVideo();
   } catch (e) {
-    let info = document.getElementById('info');
-    info.textContent = e.message;
+    info = document.getElementById('info');
+    info.textContent = 'camera access needed to know whether you touch your face. Please grant';
     info.style.display = 'block';
     throw e;
   }
@@ -229,6 +241,7 @@ const landmarksRealTime = async (video) => {
   videoHeight = video.videoHeight;
 
   const canvas = document.getElementById('output');
+
 
   canvas.width = videoWidth;
   canvas.height = videoHeight;
@@ -257,7 +270,7 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-    lowSpeedMode = true;
+    state.lowSpeedMode = true;
   }, 30000);
 
   async function frameLandmarks() {
@@ -406,7 +419,7 @@ const landmarksRealTime = async (video) => {
 
   async function drawAttention(){
     ctx.fillStyle = "#32EEDB";
-    ctx.fillRect(25, 35, 90, 80);
+    ctx.fillRect(25, 35, 60, 80);
     ctx.textBaseline = "top";
     ctx.fillStyle = '#FF0000';
     ctx.font = "60px Arial";
