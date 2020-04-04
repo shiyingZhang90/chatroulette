@@ -178,13 +178,13 @@ const mlFaceHand = async () => {
   else if (Notification.permission === "granted") {
     // If it's okay let's create a notification
     let notification = new Notification("Hi there!");
-    console.log("already graneted")
+    // console.log("already graneted")
   }
 
   else if (Notification.permission !== "granted") {
     console.log("in deny loop")
     const handlePermission = (permission) => {
-      console.log("permission in loop", permission)
+      // console.log("permission in loop", permission)
       // If the user accepts, let's create a notification
       if (permission === "granted") {
         let notification = new Notification("Hi there!");
@@ -280,7 +280,7 @@ const landmarksRealTime = async (video) => {
     cli_id = uuidv4();
     localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
   }
-  console.log("client id is", cli_id)
+  // console.log("client id is", cli_id)
 
 
   // These anchor points allow the hand pointcloud to resize according to its
@@ -331,12 +331,15 @@ const landmarksRealTime = async (video) => {
         // console.log("finger_tips", finger_points)
 
       }
+      if (state.lowSpeedMode){
+        await delay(700);
+      } 
 
     }
 
     stats.end();
     //requestAnimationFrame(frameLandmarks);
-    //console.log("return finger_points", finger_points)
+
     return finger_points;
   };
 
@@ -399,7 +402,7 @@ const landmarksRealTime = async (video) => {
 
       });
       if (state.lowSpeedMode){
-        await delay(200);
+        await delay(1000);
       } 
     }
     
@@ -429,7 +432,7 @@ const landmarksRealTime = async (video) => {
     const fingerPromise = model ? frameLandmarks() : Promise.resolve([]);
     const minDelay = delay(30);
     const values = await Promise.all([facePromise, fingerPromise, minDelay]);
-
+    // console.log("monitor running")
     if (Object.keys(values && values[0] && values[0]).length === 0 && values[0].constructor === Object) {
       // console.log("no polygon_all returned")
     } else {
@@ -442,7 +445,7 @@ const landmarksRealTime = async (video) => {
       const noseCnt = (polygon_nose || []).length;
       const fingerCnt = (finger_points || []).length;
       let noseNumber, lipNumber, eyeNumber
-
+      // console.log("noseCnt", noseCnt, "fingerCnt", fingerCnt)
       let fingerTouchNose = false;
       if(noseCnt > 0 && fingerCnt > 0) {
         for (let i=0; i< fingerCnt; i++) {
@@ -450,6 +453,7 @@ const landmarksRealTime = async (video) => {
             fingerTouchNose = true;
           }
         }
+        // console.log("fingerTouchNose", fingerTouchNose, "notifyAllow", notifyAllow)
         if ( (fingerTouchNose == true) && notifyAllow == true ) {
 
           push.create("You just touched your nose!", {
@@ -460,6 +464,7 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          // console.log("touched nose")
           drawAttention();
           analytics.track('TouchNose', {
             category: 'Notification',
@@ -490,6 +495,7 @@ const landmarksRealTime = async (video) => {
                   this.close();
               }
           });
+          // console.log("touched mouth")
           drawAttention();
           analytics.track('TouchMouth', {
             category: 'Notification',
@@ -520,7 +526,7 @@ const landmarksRealTime = async (video) => {
               }
           });
           drawAttention();
-          analytics.track('TouchMouth', {
+          analytics.track('TouchEye', {
             category: 'Notification',
             label: cli_id,
             value: 41
