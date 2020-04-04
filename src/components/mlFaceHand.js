@@ -59,7 +59,7 @@ const mobile = isMobile();
 // Don't render the point cloud on mobile in order to maximize performance and
 // to avoid crowding limited screen space.
 // const renderPointcloud = mobile === false;
-const renderPointcloud = false;
+
 
 const state = {
   // backend: 'wasm',
@@ -67,19 +67,11 @@ const state = {
   lowSpeedMode: false
 };
 
-if (renderPointcloud) {
-  state.renderPointcloud = true;
-}
+
 
 function setupDatGui() {
   const gui = new dat.GUI();
   gui.add(state, 'lowSpeedMode');
-  if (renderPointcloud) {
-    gui.add(state, 'renderPointcloud').onChange(render => {
-      document.querySelector('#scatter-gl-container').style.display =
-        render ? 'inline-block' : 'none';
-    });
-  }
 }
 
 function drawPoint(ctx, y, x, r) {
@@ -308,30 +300,6 @@ const landmarksRealTime = async (video) => {
 
         // console.log("finger_tips", finger_points)
 
-        if (renderPointcloud === true && scatterGL != null) {
-          const pointsData = result.map(point => {
-            return [-point[0], -point[1], -point[2]];
-          });
-
-          const dataset = new ScatterGL.Dataset([...pointsData, ...ANCHOR_POINTS]);
-
-          if (!scatterGLHasInitialized) {
-            scatterGL.render(dataset);
-
-            const fingers = Object.keys(fingerLookupIndices);
-
-            scatterGL.setSequences(fingers.map(finger => ({ indices: fingerLookupIndices[finger] })));
-            scatterGL.setPointColorer((index) => {
-              if (index < pointsData.length) {
-                return 'steelblue';
-              }
-              return 'white'; // Hide.
-            });
-          } else {
-            scatterGL.updateDataset(dataset);
-          }
-          scatterGLHasInitialized = true;
-        }
       }
 
     }
@@ -542,14 +510,6 @@ const landmarksRealTime = async (video) => {
 
   monitorFaceTouch()
 
-  if (renderPointcloud) {
-    document.querySelector('#scatter-gl-container').style =
-      `width: ${VIDEO_WIDTH}px; height: ${VIDEO_HEIGHT}px;`;
-
-    scatterGL = new ScatterGL(
-      document.querySelector('#scatter-gl-container'),
-      { 'rotateOnStart': false, 'selectEnabled': false });
-  }
 };
 
 navigator.getUserMedia = navigator.getUserMedia ||
