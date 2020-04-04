@@ -30,6 +30,7 @@
     "scatter-gl": "0.0.4",
     "stats-js": "^1.0.1",
     "stats.js": "^0.17.0",
+    "uuid": "^7.0.3",
     "v-gallery": "^1.2.4",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",

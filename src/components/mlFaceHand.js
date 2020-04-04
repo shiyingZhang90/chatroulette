@@ -23,6 +23,7 @@ import {version} from '@tensorflow/tfjs-backend-wasm/dist/version';
 import push from 'push.js';
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
+import { v4 as uuidv4 } from 'uuid';
 
 
 const analytics = Analytics({
@@ -33,6 +34,9 @@ const analytics = Analytics({
     })
   ]
 })
+
+
+
 
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
@@ -177,9 +181,9 @@ const mlFaceHand = async () => {
     console.log("already graneted")
   }
 
-  else if (Notification.permission === "default" | Notification.permission === "denied") {
+  else if (Notification.permission !== "granted") {
     console.log("in deny loop")
-    Notification.requestPermission().then(function (permission) {
+    const handlePermission = (permission) => {
       console.log("permission in loop", permission)
       // If the user accepts, let's create a notification
       if (permission === "granted") {
@@ -187,11 +191,27 @@ const mlFaceHand = async () => {
       } 
       else {
         let info = document.getElementById('info');
-        info.textContent = 'notification access needed to notify you even you leave this website. Please grant';
+        info.textContent = 'notification access needed to notify you even you leave this website. For firefox users, checkout meesage icon in address bar';
         info.style.display = 'block';
       }
-    });
+    }
+
+    try {
+      Notification.requestPermission()
+            .then(handlePermission)                                                                                                                                               
+    } catch (error) {
+        // Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
+        // throws a TypeError. It takes a callback as the first argument                                                                                                                                       
+        // instead.
+        if (error instanceof TypeError) {
+            Notification.requestPermission(handlePermission);
+        } else {
+            throw error;                                                                                                                                                                                       
+        }                                                                                                                                                                                                      
+    } 
+
   }
+
 
   
   const faceModelPromise = facemesh.load({maxFaces: 1});
@@ -251,6 +271,16 @@ const landmarksRealTime = async (video) => {
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   
+  let cli_id
+
+  if (localStorage.hasOwnProperty("clientId")) {
+    cli_id = localStorage.getItem("clientId")
+  }
+  else {
+    cli_id = uuidv4();
+    localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
+  }
+  console.log("client id is", cli_id)
 
 
   // These anchor points allow the hand pointcloud to resize according to its
@@ -370,7 +400,6 @@ const landmarksRealTime = async (video) => {
       });
       if (state.lowSpeedMode){
         await delay(200);
-        console.log("low speed now")
       } 
     }
     
@@ -434,9 +463,10 @@ const landmarksRealTime = async (video) => {
           drawAttention();
           analytics.track('TouchNose', {
             category: 'Notification',
-            label: 'javascript',
+            label: cli_id,
             value: 42
           })
+
           notifyAllow = false;
           setTimeout(function() {
             notifyAllow = true;
@@ -463,7 +493,7 @@ const landmarksRealTime = async (video) => {
           drawAttention();
           analytics.track('TouchMouth', {
             category: 'Notification',
-            label: 'javascript',
+            label: cli_id,
             value: 41
           })
           notifyAllow = false;
@@ -492,7 +522,7 @@ const landmarksRealTime = async (video) => {
           drawAttention();
           analytics.track('TouchMouth', {
             category: 'Notification',
-            label: 'javascript',
+            label: cli_id,
             value: 41
           })
           notifyAllow = false;

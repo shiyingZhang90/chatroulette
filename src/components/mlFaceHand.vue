@@ -112,7 +112,7 @@ export default {
   #canvas-wrapper {
     position: relative;
   }
-  #canvas-wrapper, #scatter-gl-container {
+  #canvas-wrapper {
     display: inline-block;
     vertical-align: top;
     margin-left: 40px;
@@ -120,9 +120,6 @@ export default {
     overflow: hidden;
   }
 
-  #scatter-gl-container {
-    position: relative;
-  }
 
   .canvas-container {
     margin-left: 15px;
@@ -144,13 +141,7 @@ export default {
     display: inline-block;
   }
 
-  /* center the canvas within its wrapper */
-  #scatter-gl-container canvas {
-    transform: translate3d(-50%, -50%, 0);
-    left: 50%;
-    top: 50%;
-    position: absolute;
-  }
+
   .explanation {
     background-color: lightblue;
     color: white;
