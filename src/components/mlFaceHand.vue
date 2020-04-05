@@ -2,7 +2,7 @@
 <div class="container-fluid" style="height:100%">
   <div class="header m-0 py-3">
     <div class="container">
-      <h1 class="logo ml-2">CoAvoid</h1>
+      <h1 class="logo ml-2">Co-Avoid.com</h1>
       <h5 id="info" class="notice"></h5>
     </div>
   </div>
@@ -13,7 +13,7 @@
         <div class="h-100 d-flex align-items-center">
           <div class = "text-body">
             <div class="explanation p-2">
-              <h1 >Magic Coavoid</h1>
+              <h1 >Magic Co-avoid</h1>
               <h3 class = "body">The CDC lists "avoid touching your eyes, nose, and mouse" as critical measure to avoid COVID-19.</h3>
               <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
             </div>
