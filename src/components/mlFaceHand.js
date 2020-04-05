@@ -68,7 +68,8 @@ const mobile = isMobile();
 const state = {
   // backend: 'wasm',
   triangulateMesh: true,
-  lowSpeedMode: false
+  lowSpeedMode: false,
+  windowOpen: false
 };
 
 
@@ -76,6 +77,7 @@ const state = {
 function setupDatGui() {
   const gui = new dat.GUI();
   gui.add(state, 'lowSpeedMode');
+  gui.add(state, 'windowOpen');
 }
 
 function drawPoint(ctx, y, x, r) {
@@ -121,13 +123,18 @@ let model, model_face;
 
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    if (location.protocol === 'http:') {
+      alert('Camera and Mic are not available vis http connection.')
+    } else {
+      alert('Cannot find your camera / mic.')
+    }
     throw new Error(
       'Browser API navigator.mediaDevices.getUserMedia not available');
   }
 
   const video = document.getElementById('video');
   const stream = await navigator.mediaDevices.getUserMedia({
-      'audio': false,
+      'audio': true,
       'video': {
         facingMode: 'user',
         // Only setting the video to a specified size in order to accommodate a
@@ -138,11 +145,23 @@ async function setupCamera() {
     },
        // errorCallback
    function(err) {
+
     if(err === PERMISSION_DENIED) {
       // Explain why you need permission and how to update the permission setting
     }
    }
-  );
+  )
+  .then(function(stream) {
+    var videoTracks = stream.getVideoTracks();
+    console.log('Using video device: ' + videoTracks[0].label);
+    const state = videoTracks.readyState
+
+    stream.onremovetrack = function() {
+      console.log('Stream ended');
+    };
+    return stream;
+  })
+  .catch((error)=>{console.log("stream ", error)});
   video.srcObject = stream;
 
   return new Promise((resolve) => {
@@ -213,7 +232,8 @@ const mlFaceHand = async () => {
   }
 
 
-  
+
+
   const faceModelPromise = facemesh.load({maxFaces: 1});
   //const videoPromise =  loadVideo().catch(() => );
   const values = await Promise.all([faceModelPromise]);
@@ -295,6 +315,8 @@ const landmarksRealTime = async (video) => {
     state.lowSpeedMode = true;
   }, 30000);
 
+
+
   async function frameLandmarks() {
     stats.begin();
     let finger_points = [];
@@ -339,7 +361,6 @@ const landmarksRealTime = async (video) => {
 
     stats.end();
     //requestAnimationFrame(frameLandmarks);
-
     return finger_points;
   };
 
@@ -352,7 +373,13 @@ const landmarksRealTime = async (video) => {
     stats.begin();
     const predictions_face = await model_face.estimateFaces(video);
 
+
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
+    console.log("image capture", canvas.toDataURL('image/png'))
+
+    var videoTracks = video.srcObject.getVideoTracks();
+    const videoTrackState = videoTracks.readyState
+    console.log("VideoTrack state ", videoTracks)
     if (predictions_face.length > 0) {
       predictions_face.forEach(prediction => {
         const keypoints = prediction.scaledMesh;
@@ -427,6 +454,7 @@ const landmarksRealTime = async (video) => {
     ctx.fillStyle = "#32EEDB";
   }
 
+
   async function monitorFaceTouch() {
     const facePromise = model_face ? frameLandmarksFace() : Promise.resolve([]);
     const fingerPromise = model ? frameLandmarks() : Promise.resolve([]);
@@ -445,7 +473,9 @@ const landmarksRealTime = async (video) => {
       const noseCnt = (polygon_nose || []).length;
       const fingerCnt = (finger_points || []).length;
       let noseNumber, lipNumber, eyeNumber
-      // console.log("noseCnt", noseCnt, "fingerCnt", fingerCnt)
+
+      
+
       let fingerTouchNose = false;
       if(noseCnt > 0 && fingerCnt > 0) {
         for (let i=0; i< fingerCnt; i++) {

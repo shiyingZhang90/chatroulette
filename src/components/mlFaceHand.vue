@@ -18,7 +18,7 @@
               <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
             </div>
             <div class="notice">
-              <h3 class = "body">Please grant access to notification and camera so you will be protected. All data is processed locally on your computer and not sent to the Internet.</h3>
+              <h3 class = "body">Feel free to minimize this tab to run in background. All data is processed locally on your computer and not sent to the Internet.</h3>
             </div> 
           </div> 
         </div>
@@ -32,10 +32,13 @@
           <h5 class="notice text-center"> FaceMesh take time to load, be patient</h5>
           <div class="embed-responsive embed-responsive-4by3">
             <canvas id="output" class="output embed-responsive-item"></canvas>
-            <video id="video" playsinline class="video"/>
+            <video id="video" playsinline autoplay class="video"/>
           </div>
         </div>
       </div>
+    </div>
+    <div>
+      <button style="width: 30px; height:50px; background-color: blue" v-on:click="openWindow">Add 1</button>
     </div>
     <div class="embed-responsive embed-responsive-16by9 mx-auto my-3">
       <iframe class="embed-responsive-item" src="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-facts-infographic" allowfullscreen ></iframe>
@@ -97,12 +100,18 @@ export default {
     //     }
     //   }
     // ]),
+
     this.openCamera();
   },
   methods: {
     openCamera () {
       mlFaceHand();
       // tryRecursion();
+    },
+    openWindow () {
+      var windowObjectReference;
+      var windowFeatures = "width = 500, height = 600";
+      windowObjectReference = window.open("http://localhost:8080/coavoid", "", windowFeatures);
     } 
   }
 }
