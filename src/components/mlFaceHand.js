@@ -354,7 +354,7 @@ const landmarksRealTime = async (video) => {
 
       }
       if (state.lowSpeedMode){
-        await delay(1000);
+        await delay(1500);
       } 
 
     }
@@ -429,7 +429,7 @@ const landmarksRealTime = async (video) => {
 
       });
       if (state.lowSpeedMode){
-        await delay(1000);
+        await delay(1500);
       } 
     }
     

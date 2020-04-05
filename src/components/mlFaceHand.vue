@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid">
+<div class="container-fluid" style="height:100%">
   <div class="header m-0 py-3">
     <div class="container">
       <h1 class="logo ml-2">CoAvoid</h1>
@@ -7,7 +7,7 @@
     </div>
   </div>
   <div id="predictions"></div>
-  <div class="container px-0 my-4">
+  <div class="container px-0 my-4" style="height:100%">
     <div class="row">
       <div class="col-lg">
         <div class="h-100 d-flex align-items-center">
@@ -37,11 +37,17 @@
         </div>
       </div>
     </div>
-    <div>
-      <button style="width: 30px; height:50px; background-color: blue" v-on:click="openWindow">Add 1</button>
-    </div>
-    <div class="embed-responsive embed-responsive-16by9 mx-auto my-3">
-      <iframe class="embed-responsive-item" src="https://www.hopkinsmedicine.org/health/conditions-and-diseases/coronavirus/coronavirus-facts-infographic" allowfullscreen ></iframe>
+    <div class="row" style="height:100%">
+      <div class="col-lg">
+        <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
+          <iframe class="embed-responsive-item" src="https://www.tasteofhome.com/collection/easy-dinner-ideas/" allowfullscreen ></iframe>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
+          <iframe class="embed-responsive-item" src="https://www.healthline.com/health/fitness-exercise/at-home-workouts" allowfullscreen ></iframe>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -107,12 +113,7 @@ export default {
     openCamera () {
       mlFaceHand();
       // tryRecursion();
-    },
-    openWindow () {
-      var windowObjectReference;
-      var windowFeatures = "width = 500, height = 600";
-      windowObjectReference = window.open("http://localhost:8080/coavoid", "", windowFeatures);
-    } 
+    }
   }
 }
 </script>
