@@ -106,8 +106,8 @@ export default {
     //     }
     //   }
     // ]),
-    setTimeout(() => this.elementVisible = true, 5000);
-    setTimeout(() => this.elementVisible = false, 25000);
+    setTimeout(() => this.elementVisible = true, 15000);
+    setTimeout(() => this.elementVisible = false, 35000);
     this.openCamera();
   },
   methods: {

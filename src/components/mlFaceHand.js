@@ -313,7 +313,7 @@ const landmarksRealTime = async (video) => {
   setTimeout(() => {
     draw = false;
     state.lowSpeedMode = true;
-  }, 30000);
+  }, 35000);
 
 
 
