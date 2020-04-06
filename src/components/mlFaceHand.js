@@ -263,7 +263,7 @@ const mlFaceHand = async () => {
 
 
 const landmarksRealTime = async (video) => {
-  setupDatGui();
+  // setupDatGui();
 
   const stats = new Stats();
   stats.showPanel(0);
@@ -375,7 +375,7 @@ const landmarksRealTime = async (video) => {
 
 
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
-    console.log("image capture", canvas.toDataURL('image/png'))
+
 
     var videoTracks = video.srcObject.getVideoTracks();
     const videoTrackState = videoTracks.readyState

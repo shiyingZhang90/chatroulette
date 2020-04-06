@@ -12,13 +12,13 @@
       <div class="col-lg">
         <div class="h-100 d-flex align-items-center">
           <div class = "text-body">
+            <div class="notice">
+              <h3 class = "body"> All data is processed locally on your computer and not sent to the Internet.Feel free to minimize this tab to run in background.</h3>
+            </div>
             <div class="explanation p-2">
               <h1 >Magic Co-avoid</h1>
               <h3 class = "body">The CDC lists "avoid touching your eyes, nose, and mouse" as critical measure to avoid COVID-19.</h3>
               <h3 class = "body">Coavoid uses AI to send you notification whenever you touch your eyes, nose and mouth</h3>
-            </div>
-            <div class="notice">
-              <h3 class = "body">Feel free to minimize this tab to run in background. All data is processed locally on your computer and not sent to the Internet.</h3>
             </div> 
           </div> 
         </div>
@@ -29,9 +29,9 @@
       </div>
       <div class="col-lg">
         <div class="mt-3">
-          <h5 class="notice text-center"> FaceMesh take time to load, be patient</h5>
+          <h5 class="notice text-center"> FaceMesh take time to load, be patient. Try touch your nose</h5>
           <div class="embed-responsive embed-responsive-4by3">
-            <canvas id="output" class="output embed-responsive-item"></canvas>
+            <canvas id="output" v-show="elementVisible" class="output embed-responsive-item"></canvas>
             <video id="video" playsinline autoplay class="video"/>
           </div>
         </div>
@@ -60,11 +60,11 @@ import Vue from 'vue'
 import Push from 'push.js';
 export default {
   name: 'worker-test', 
-  // data() {
-  //   return {
-  //     worker: null,
-  //   }
-  // },
+    data() {
+      return {
+        elementVisible: false
+      }
+    },
   mounted() {
     this.$ga.page({
       page: '/',
@@ -106,7 +106,8 @@ export default {
     //     }
     //   }
     // ]),
-
+    setTimeout(() => this.elementVisible = true, 5000);
+    setTimeout(() => this.elementVisible = false, 25000);
     this.openCamera();
   },
   methods: {
