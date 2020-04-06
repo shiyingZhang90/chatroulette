@@ -153,7 +153,7 @@ async function setupCamera() {
   )
   .then(function(stream) {
     var videoTracks = stream.getVideoTracks();
-    console.log('Using video device: ' + videoTracks[0].label);
+
     const state = videoTracks.readyState
 
     stream.onremovetrack = function() {
@@ -201,7 +201,6 @@ const mlFaceHand = async () => {
   }
 
   else if (Notification.permission !== "granted") {
-    console.log("in deny loop")
     const handlePermission = (permission) => {
       // console.log("permission in loop", permission)
       // If the user accepts, let's create a notification
@@ -379,7 +378,7 @@ const landmarksRealTime = async (video) => {
 
     var videoTracks = video.srcObject.getVideoTracks();
     const videoTrackState = videoTracks.readyState
-    console.log("VideoTrack state ", videoTracks)
+
     if (predictions_face.length > 0) {
       predictions_face.forEach(prediction => {
         const keypoints = prediction.scaledMesh;

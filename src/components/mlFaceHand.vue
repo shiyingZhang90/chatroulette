@@ -34,6 +34,15 @@
             <canvas id="output" v-show="elementVisible" class="output embed-responsive-item"></canvas>
             <video id="video" playsinline autoplay class="video"/>
           </div>
+          <b-form inline class = "my-2 mx-5">
+            <b-input
+              v-model="feedback"
+              id="inline-form-input-name"
+              class="mb-2 mr-sm-2 mb-sm-0 w-75"
+              placeholder="Feedback"
+            ></b-input>
+            <b-button v-on:click="feedbackSubmit" variant="primary">Submit</b-button>
+          </b-form>
         </div>
       </div>
     </div>
@@ -62,7 +71,8 @@ export default {
   name: 'worker-test', 
     data() {
       return {
-        elementVisible: false
+        elementVisible: false,
+        feedback: ''
       }
     },
   mounted() {
@@ -114,6 +124,14 @@ export default {
     openCamera () {
       mlFaceHand();
       // tryRecursion();
+    },
+    feedbackSubmit () {
+      this.$ga.event({
+        eventCategory: 'feedback',
+        eventAction: this.feedback,
+        eventLabel: 'vue submit',
+        eventValue: 123
+      })
     }
   }
 }
