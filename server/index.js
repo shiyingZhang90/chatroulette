@@ -7,7 +7,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const HTTPS_CERT_PATH = `/etc/letsencrypt/live/klogserver.westus2.cloudapp.azure.com/cert.pem`;
+const HTTPS_CERT_PATH = `/etc/letsencrypt/live/klogserver.westus2.cloudapp.azure.com/fullchain.pem`;
 const HTTPS_KEY_PATH = `/etc/letsencrypt/live/klogserver.westus2.cloudapp.azure.com/privkey.pem`;
 
 const startWsS = require('./websocket.js')
