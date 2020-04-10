@@ -57,6 +57,10 @@ let videoWidth, videoHeight, scatterGLHasInitialized = false, scatterGL,
     pinky: [0, 17, 18, 19, 20]
   }; // for rendering each finger as a polyline
 
+let cli_id = null
+
+
+
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = isMobile();
@@ -147,7 +151,6 @@ async function setupCamera() {
    function(err) {
 
     if(err === PERMISSION_DENIED) {
-      // Explain why you need permission and how to update the permission setting
     }
    }
   )
@@ -161,7 +164,14 @@ async function setupCamera() {
     };
     return stream;
   })
-  .catch((error)=>{console.log("stream ", error)});
+  .catch((error)=>{
+    analytics.track('Camera', {
+      category: 'Access_Deny',
+      label: cli_id,
+      value: 30
+    })
+    console.log("camera deny cli", cli_id)
+  });
   video.srcObject = stream;
 
   return new Promise((resolve) => {
@@ -189,6 +199,13 @@ function trans2D (array) {
 }
 
 const mlFaceHand = async () => {
+  if (localStorage.hasOwnProperty("clientId")) {
+    cli_id = localStorage.getItem("clientId")
+  }
+  else {
+    cli_id = uuidv4();
+    localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
+  }
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notification");
   }
@@ -208,9 +225,15 @@ const mlFaceHand = async () => {
         let notification = new Notification("Hi there!");
       } 
       else {
+        analytics.track('Notification', {
+          category: 'Access_Deny',
+          label: cli_id,
+          value: 30
+        })
+        console.log("notification deny cli", cli_id)
         let info = document.getElementById('info');
         info.textContent = 'notification access needed to notify you even you leave this website. For firefox users, checkout meesage icon in address bar';
-        info.style.display = 'block';
+        info.style.display = 'block';   
       }
     }
 
@@ -290,16 +313,16 @@ const landmarksRealTime = async (video) => {
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   
-  let cli_id
+  // let cli_id
 
-  if (localStorage.hasOwnProperty("clientId")) {
-    cli_id = localStorage.getItem("clientId")
-  }
-  else {
-    cli_id = uuidv4();
-    localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
-  }
-  // console.log("client id is", cli_id)
+  // if (localStorage.hasOwnProperty("clientId")) {
+  //   cli_id = localStorage.getItem("clientId")
+  // }
+  // else {
+  //   cli_id = uuidv4();
+  //   localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
+  // }
+
 
 
   // These anchor points allow the hand pointcloud to resize according to its
@@ -353,7 +376,7 @@ const landmarksRealTime = async (video) => {
 
       }
       if (state.lowSpeedMode){
-        await delay(1500);
+        await delay(2000);
       } 
 
     }
@@ -428,7 +451,7 @@ const landmarksRealTime = async (video) => {
 
       });
       if (state.lowSpeedMode){
-        await delay(1500);
+        await delay(2000);
       } 
     }
     

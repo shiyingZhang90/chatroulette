@@ -49,12 +49,12 @@
     <div class="row" style="height:100%">
       <div class="col-lg">
         <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
-          <iframe class="embed-responsive-item" src="https://www.tasteofhome.com/collection/easy-dinner-ideas/" allowfullscreen ></iframe>
+          <iframe class="embed-responsive-item" src="https://greatist.com/eat/10-minute-recipes#lunch" allowfullscreen ></iframe>
         </div>
       </div>
       <div class="col-lg">
         <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
-          <iframe class="embed-responsive-item" src="https://www.healthline.com/health/fitness-exercise/at-home-workouts" allowfullscreen ></iframe>
+          <iframe class="embed-responsive-item" src="https://www.self.com/gallery/bodyweight-exercises-you-can-do-at-home" allowfullscreen ></iframe>
         </div>
       </div>
     </div>
@@ -81,9 +81,12 @@ export default {
       title: 'CoAvoid',
       location: window.location.href
     })
-    // let data 
-    // this.worker.postMessage('pull-data', [data])
-    //   .then(res => console.log(res)) 
+    this.$ga.time({
+      timingCategory: 'userTiming',
+      timingVar: Math.ceil(Math.random()*10),
+      timingValue: 20,
+      timingLabel: 'label'
+    })
   },
   destroyed() {
     this.worker = null
