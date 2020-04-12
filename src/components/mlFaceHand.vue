@@ -30,19 +30,10 @@
       <div class="col-lg">
         <div class="mt-3">
           <h5 class="notice text-center"> FaceMesh take time to load, be patient. Try touch your nose</h5>
-          <div class="embed-responsive embed-responsive-4by3">
-            <canvas id="output" v-show="elementVisible" class="output embed-responsive-item"></canvas>
-            <video id="video" playsinline autoplay class="video"/>
-          </div>
-          <b-form inline class = "my-2 mx-5">
-            <b-input
-              v-model="feedback"
-              id="inline-form-input-name"
-              class="mb-2 mr-sm-2 mb-sm-0 w-75"
-              placeholder="Feedback"
-            ></b-input>
-            <b-button v-on:click="feedbackSubmit" variant="primary">Submit</b-button>
-          </b-form>
+<!--           <div class="embed-responsive embed-responsive-4by3"> -->
+          <div id="bm" v-show="animationVisible" class="animation"> </div>
+          <canvas id="output" v-show="elementVisible" class="output embed-responsive-item"></canvas>
+          <video id="video" playsinline autoplay class="video"/>
         </div>
       </div>
     </div>
@@ -72,6 +63,7 @@ export default {
     data() {
       return {
         elementVisible: false,
+        animationVisible: false,
         feedback: ''
       }
     },
@@ -91,7 +83,7 @@ export default {
   destroyed() {
     this.worker = null
   },
-  created () {
+  mounted () {
 
     // this.$worker.run((args) => {
     //   {args}
@@ -119,7 +111,8 @@ export default {
     //     }
     //   }
     // ]),
-    setTimeout(() => this.elementVisible = true, 15000);
+    setTimeout(() => this.animationVisible = true, 10000);
+    setTimeout(() => this.elementVisible = true, 10000);
     setTimeout(() => this.elementVisible = false, 35000);
     this.openCamera();
   },
@@ -167,8 +160,15 @@ export default {
     height: 100%;
     position: absolute;
   }
-  .output {
+  .animation {
+    width: 30%;
+    height: 30%;
+    position: absolute;
     z-index: 100;
+    display: inline-block;
+  }
+  .output {
+    z-index: 50;
     position: absolute;
     display: inline-block;
   }

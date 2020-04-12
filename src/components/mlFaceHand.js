@@ -24,6 +24,8 @@ import push from 'push.js';
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import { v4 as uuidv4 } from 'uuid';
+import lottie from 'lottie-web';
+import animationData from '../assets/lottie/19083-elephant-jumping.json';
 
 
 const analytics = Analytics({
@@ -72,7 +74,7 @@ const mobile = isMobile();
 const state = {
   // backend: 'wasm',
   triangulateMesh: true,
-  lowSpeedMode: false,
+  elephantJumping: false,
   windowOpen: false
 };
 
@@ -80,8 +82,7 @@ const state = {
 
 function setupDatGui() {
   const gui = new dat.GUI();
-  gui.add(state, 'lowSpeedMode');
-  gui.add(state, 'windowOpen');
+  gui.add(state, 'elephantJumping');
 }
 
 function drawPoint(ctx, y, x, r) {
@@ -206,6 +207,15 @@ const mlFaceHand = async () => {
     cli_id = uuidv4();
     localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
   }
+
+  lottie.loadAnimation({
+    container: document.getElementById('bm'), // Required
+    animationData: animationData,
+    renderer: 'svg', // Required
+    loop: true, // Optional
+    autoplay: true, // Optional
+  })
+
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notification");
   }
@@ -285,7 +295,7 @@ const mlFaceHand = async () => {
 
 
 const landmarksRealTime = async (video) => {
-  // setupDatGui();
+  setupDatGui();
 
   const stats = new Stats();
   stats.showPanel(0);
@@ -313,15 +323,7 @@ const landmarksRealTime = async (video) => {
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   
-  // let cli_id
 
-  // if (localStorage.hasOwnProperty("clientId")) {
-  //   cli_id = localStorage.getItem("clientId")
-  // }
-  // else {
-  //   cli_id = uuidv4();
-  //   localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
-  // }
 
 
 
@@ -334,8 +336,8 @@ const landmarksRealTime = async (video) => {
 
   setTimeout(() => {
     draw = false;
-    state.lowSpeedMode = true;
-  }, 35000);
+    state.elephantJumping = true;
+  }, 45000);
 
 
 
@@ -375,7 +377,7 @@ const landmarksRealTime = async (video) => {
         // console.log("finger_tips", finger_points)
 
       }
-      if (state.lowSpeedMode){
+      if (state.elephantJumping){
         await delay(2000);
       } 
 
@@ -399,12 +401,26 @@ const landmarksRealTime = async (video) => {
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
 
 
+
     var videoTracks = video.srcObject.getVideoTracks();
     const videoTrackState = videoTracks.readyState
 
     if (predictions_face.length > 0) {
       predictions_face.forEach(prediction => {
         const keypoints = prediction.scaledMesh;
+
+        let animationBM = document.getElementById('bm');
+        if (state.elephantJumping){
+          animationBM.style.visibility = 'hidden'
+        } else {
+          animationBM.style.visibility = 'visible'
+          animationBM.style.position = "absolute";
+          animationBM.style.left = (560-keypoints[10][0]).toString()+"px";
+          animationBM.style.top = (keypoints[10][1]-120).toString()+"px";
+        } 
+
+
+
         var polygon_lips_upper = trans2D(prediction.annotations.lipsUpperOuter)
         var polygon_lips_lower = trans2D(prediction.annotations.lipsLowerOuter.slice(0,9))
         polygon_lips = polygon_lips_upper.concat(polygon_lips_lower, prediction.annotations.lipsLowerOuter.slice(9,10))
@@ -450,7 +466,7 @@ const landmarksRealTime = async (video) => {
         }
 
       });
-      if (state.lowSpeedMode){
+      if (state.elephantJumping){
         await delay(2000);
       } 
     }
