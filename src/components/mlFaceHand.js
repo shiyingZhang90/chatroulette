@@ -25,7 +25,11 @@ import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 import { v4 as uuidv4 } from 'uuid';
 import lottie from 'lottie-web';
-import animationData from '../assets/lottie/19083-elephant-jumping.json';
+import elephantAsset from '../assets/lottie/19083-elephant-jumping.json';
+import expressoAsset from '../assets/lottie/18761-expresso.json';
+import handAsset from '../assets/lottie/17686-wash-your-hands-regularly.json';
+import virusAsset from '../assets/lottie/17745-viroses.json';
+import wfhAsset from '../assets/lottie/14354-busy.json';
 
 
 const analytics = Analytics({
@@ -60,7 +64,12 @@ let videoWidth, videoHeight, scatterGLHasInitialized = false, scatterGL,
   }; // for rendering each finger as a polyline
 
 let cli_id = null
-
+const configue = {
+  animation: {
+    id: null,
+    data: null
+  }
+}
 
 
 const VIDEO_WIDTH = 640;
@@ -199,6 +208,10 @@ function trans2D (array) {
   return array;
 }
 
+function loadNewAnimation(){
+   console.log('Horray! Someone wrote "');
+}
+
 const mlFaceHand = async () => {
   if (localStorage.hasOwnProperty("clientId")) {
     cli_id = localStorage.getItem("clientId")
@@ -208,13 +221,8 @@ const mlFaceHand = async () => {
     localStorage.setItem("clientId", cli_id) // here someid from your google analytics fetch
   }
 
-  lottie.loadAnimation({
-    container: document.getElementById('bm'), // Required
-    animationData: animationData,
-    renderer: 'svg', // Required
-    loop: true, // Optional
-    autoplay: true, // Optional
-  })
+
+
 
   if (!("Notification" in window)) {
     alert("This browser does not support desktop notification");
@@ -295,7 +303,7 @@ const mlFaceHand = async () => {
 
 
 const landmarksRealTime = async (video) => {
-  setupDatGui();
+  // setupDatGui();
 
   const stats = new Stats();
   stats.showPanel(0);
@@ -326,18 +334,20 @@ const landmarksRealTime = async (video) => {
 
 
 
-
   // These anchor points allow the hand pointcloud to resize according to its
   // position in the input.
   const ANCHOR_POINTS = [[0, 0, 0], [0, -VIDEO_HEIGHT, 0],
   [-VIDEO_WIDTH, 0, 0], [-VIDEO_WIDTH, -VIDEO_HEIGHT, 0]];
   var classifyPoint = require("robust-point-in-polygon");
   let draw = true;
+  let animationLeft = 560;
+  let animationTop = 120;
+  let animationKeypoint = 10;
 
   setTimeout(() => {
     draw = false;
     state.elephantJumping = true;
-  }, 45000);
+  }, 60000);
 
 
 
@@ -408,17 +418,40 @@ const landmarksRealTime = async (video) => {
     if (predictions_face.length > 0) {
       predictions_face.forEach(prediction => {
         const keypoints = prediction.scaledMesh;
+        
+        if (configue.newAnimation && configue.newAnimation.id !== configue.animation.id) { 
+          state.elephantJumping = false;
+          setTimeout(() => {
+            state.elephantJumping = true;
+          }, 60000);
+          lottie.destroy('current');
+          configue.animation = configue.newAnimation;
+          animationLeft = configue.newAnimation.animationLeft;
+          animationTop = configue.newAnimation.animationTop;
+          animationKeypoint = configue.newAnimation.animationKeypoint;
+
+          const animationData = configue.animation.data;
+          if (animationData) {
+            lottie.loadAnimation({
+              name: 'current',
+              container: document.getElementById('bm'), // Required
+              animationData,
+              renderer: 'svg', // Required
+              loop: true, // Optional
+              autoplay: true, // Optional
+              rendererSettings: {
+                preserveAspectRatio: 'none'
+              },
+              progressiveLoad: true,
+            })
+          }
+        }
 
         let animationBM = document.getElementById('bm');
-        if (state.elephantJumping){
-          animationBM.style.visibility = 'hidden'
-        } else {
-          animationBM.style.visibility = 'visible'
-          animationBM.style.position = "absolute";
-          animationBM.style.left = (560-keypoints[10][0]).toString()+"px";
-          animationBM.style.top = (keypoints[10][1]-120).toString()+"px";
-        } 
-
+        animationBM.style.visibility = 'visible'
+        animationBM.style.position = "absolute";
+        animationBM.style.left = (animationLeft-keypoints[animationKeypoint][0]).toString()+"px";
+        animationBM.style.top = (keypoints[animationKeypoint][1]-animationTop).toString()+"px";
 
 
         var polygon_lips_upper = trans2D(prediction.annotations.lipsUpperOuter)
@@ -498,7 +531,6 @@ const landmarksRealTime = async (video) => {
     const fingerPromise = model ? frameLandmarks() : Promise.resolve([]);
     const minDelay = delay(30);
     const values = await Promise.all([facePromise, fingerPromise, minDelay]);
-    // console.log("monitor running")
     if (Object.keys(values && values[0] && values[0]).length === 0 && values[0].constructor === Object) {
       // console.log("no polygon_all returned")
     } else {
@@ -620,5 +652,5 @@ navigator.getUserMedia = navigator.getUserMedia ||
   navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 // main();
-export default mlFaceHand;
+export default {mlFaceHand, configue};
 

@@ -37,37 +37,111 @@
         </div>
       </div>
     </div>
-    <div class="row" style="height:100%">
-      <div class="col-lg">
-        <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
-          <iframe class="embed-responsive-item" src="https://greatist.com/eat/10-minute-recipes#lunch" allowfullscreen ></iframe>
-        </div>
-      </div>
-      <div class="col-lg">
-        <div class="embed-responsive embed-responsive-16by9 mx-auto my-3" style="height:100%">
-          <iframe class="embed-responsive-item" src="https://www.self.com/gallery/bodyweight-exercises-you-can-do-at-home" allowfullscreen ></iframe>
-        </div>
-      </div>
+    <div class="cards">
+      <li class="cards__item">
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['14354-busy']" id="14354-busy" class="card "></div>
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['19083-elephant']" id="19083-elephant" class="card"></div>
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['17745-viroses']" id="17745-viroses" class="card "></div>
+      </li>
+    </div>
+    <div class="cards">
+      <li class="cards__item">
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['18761-expresso']" id="18761-expresso" class="card "></div>
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['15156-yoga-pose']" id="15156-yoga-pose" class="card"></div>
+        <div v-on:click="mlFaceConfigue.newAnimation = animationJson['17686-wash-hand']" id="17686-wash-hand" class="card"></div>
+      </li>
     </div>
   </div>
-
 </div>  
 </template>
 
 <script>
-import mlFaceHand from './mlFaceHand'
+import mlFace from './mlFaceHand'
 import Vue from 'vue'
 import Push from 'push.js';
+import lottie from 'lottie-web';
+import elephantAsset from '../assets/lottie/19083-elephant-jumping.json';
+import expressoAsset from '../assets/lottie/18761-expresso.json';
+import yogaAsset from '../assets/lottie/15156-yoga-pose.json';
+import virusAsset from '../assets/lottie/17745-viroses.json';
+import wfhAsset from '../assets/lottie/14354-busy.json';
+import handAsset from '../assets/lottie/17686-wash-your-hands-regularly.json';
+
+
+const _ANIMATION_JSON = { 
+  '14354-busy': { id: '14354-busy', data: wfhAsset, animationLeft: 530, animationTop: 150, animationKeypoint: 10 },
+  '19083-elephant': { id: '19083-elephant', data: elephantAsset, animationLeft: 520, animationTop: 150, animationKeypoint: 10  },
+  '17745-viroses': { id: '17745-viroses', data: virusAsset, animationLeft: 520, animationTop: 110, animationKeypoint: 152  },
+  '18761-expresso': { id: '18761-expresso', data: expressoAsset, animationLeft: 520, animationTop: 0, animationKeypoint: 14  },
+  '15156-yoga-pose': { id: '15156-yoga-pose', data: yogaAsset, animationLeft: 520, animationTop: 150, animationKeypoint: 10  },
+  '17686-wash-hand': { id: '17686-wash-hand', data: handAsset, animationLeft: 520, animationTop: 20, animationKeypoint: 152  },
+};
+
+
 export default {
   name: 'worker-test', 
     data() {
       return {
         elementVisible: false,
         animationVisible: false,
-        feedback: ''
+        feedback: '',
+        counter: 0,
+        mlFaceConfigue: mlFace.configue,
+        animationJson: _ANIMATION_JSON
       }
     },
-  mounted() {
+  destroyed() {
+    this.worker = null
+  },
+  mounted () {
+    lottie.loadAnimation({
+      container: document.getElementById('14354-busy'), // Required
+      animationData: wfhAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
+    lottie.loadAnimation({
+      container: document.getElementById('19083-elephant'), // Required
+      animationData: elephantAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
+    lottie.loadAnimation({
+      container: document.getElementById('17745-viroses'), // Required
+      animationData: virusAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
+    lottie.loadAnimation({
+      container: document.getElementById('18761-expresso'), // Required
+      animationData: expressoAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
+    lottie.loadAnimation({
+      container: document.getElementById('15156-yoga-pose'), // Required
+      animationData: yogaAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
+    lottie.loadAnimation({
+      container: document.getElementById('17686-wash-hand'), // Required
+      animationData: handAsset,
+      renderer: 'svg', // Required
+      loop: true, // Optional
+      autoplay: true, // Optional
+      progressiveLoad: true,
+    })
     this.$ga.page({
       page: '/',
       title: 'CoAvoid',
@@ -79,38 +153,6 @@ export default {
       timingValue: 20,
       timingLabel: 'label'
     })
-  },
-  destroyed() {
-    this.worker = null
-  },
-  mounted () {
-
-    // this.$worker.run((args) => {
-    //   {args}
-    //   // const funcStr = args[0];
-    //   // //var argName = funcStr.substring(funcStr.indexOf("(") + 1, funcStr.indexOf(")"));
-    //   // //funcStr = funcStr.substring(funcStr.indexOf("{") + 1, funcStr.lastIndexOf("}"));
-    //   // const f = new Function('', funcStr);
-
-    //   return `Hello!`
-    // }, [this.hello])
-    // .then(result => {
-    //   console.log(result)
-    // })
-    // .catch(e => {
-    //   console.error(e)
-    // })
-    // this.worker = this.$worker.create([
-    //   {
-    //     message: 'pull-data',
-    //     func(data) {
-    //       for(var i=0; i<1000; i++) {
-    //         data++;
-    //         return i
-    //       }
-    //     }
-    //   }
-    // ]),
     setTimeout(() => this.animationVisible = true, 10000);
     setTimeout(() => this.elementVisible = true, 10000);
     setTimeout(() => this.elementVisible = false, 35000);
@@ -118,7 +160,7 @@ export default {
   },
   methods: {
     openCamera () {
-      mlFaceHand();
+      mlFace.mlFaceHand();
       // tryRecursion();
     },
     feedbackSubmit () {
@@ -144,7 +186,30 @@ export default {
     margin-top: 20px;
     overflow: hidden;
   }
-
+  .cards {
+     margin-top: 20px;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: space-between;
+  }
+  .cards__item {
+    display: flex;
+    padding: 1rem;
+    height: 300px;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 20px 40px -14px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-right: 10px;
+    margin-left: 10px;
+    width:400px;
+    cursor: pointer;
+  }
 
   .canvas-container {
     margin-left: 15px;
@@ -161,8 +226,8 @@ export default {
     position: absolute;
   }
   .animation {
-    width: 30%;
-    height: 30%;
+    width: 40%;
+    height: 40%;
     position: absolute;
     z-index: 100;
     display: inline-block;
